@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		533EF90C17E9F2F7004094C6 /* test.h in Headers */ = {isa = PBXBuildFile; fileRef = 533EF90A17E9F2F7004094C6 /* test.h */; };
-		533EF90D17E9F2F7004094C6 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533EF90B17E9F2F7004094C6 /* test.cpp */; };
+		53218B1018995B0E008181AE /* CUTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53218B0E18995B0E008181AE /* CUTest.cpp */; };
+		53218B1118995B0E008181AE /* CUTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 53218B0F18995B0E008181AE /* CUTest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		53218B14189A8B03008181AE /* CUTestReport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53218B12189A8B03008181AE /* CUTestReport.cpp */; };
+		53218B15189A8B03008181AE /* CUTestReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 53218B13189A8B03008181AE /* CUTestReport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		533EF91D17E9F365004094C6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 533EF91C17E9F365004094C6 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -25,10 +27,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		533EF90317E9F252004094C6 /* libcommon_test.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libcommon_test.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
-		533EF90A17E9F2F7004094C6 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = source/test.h; sourceTree = "<group>"; };
-		533EF90B17E9F2F7004094C6 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = source/test.cpp; sourceTree = "<group>"; };
-		533EF91317E9F342004094C6 /* test_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test_test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53218B0E18995B0E008181AE /* CUTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CUTest.cpp; sourceTree = "<group>"; };
+		53218B0F18995B0E008181AE /* CUTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CUTest.h; sourceTree = "<group>"; };
+		53218B12189A8B03008181AE /* CUTestReport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CUTestReport.cpp; sourceTree = "<group>"; };
+		53218B13189A8B03008181AE /* CUTestReport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CUTestReport.h; sourceTree = "<group>"; };
+		533EF90317E9F252004094C6 /* libcommon_test.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libcommon_test.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		533EF91317E9F342004094C6 /* test_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test_test; sourceTree = BUILT_PRODUCTS_DIR; };
 		533EF91C17E9F365004094C6 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = source/main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,7 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				533EF90E17E9F300004094C6 /* common_test */,
-				533EF91417E9F342004094C6 /* test_test */,
+				533EF91417E9F342004094C6 /* test */,
 				533EF90417E9F252004094C6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,18 +75,20 @@
 		533EF90E17E9F300004094C6 /* common_test */ = {
 			isa = PBXGroup;
 			children = (
-				533EF90A17E9F2F7004094C6 /* test.h */,
-				533EF90B17E9F2F7004094C6 /* test.cpp */,
+				53218B0E18995B0E008181AE /* CUTest.cpp */,
+				53218B0F18995B0E008181AE /* CUTest.h */,
+				53218B12189A8B03008181AE /* CUTestReport.cpp */,
+				53218B13189A8B03008181AE /* CUTestReport.h */,
 			);
-			name = "common_test";
+			name = common_test;
 			sourceTree = "<group>";
 		};
-		533EF91417E9F342004094C6 /* test_test */ = {
+		533EF91417E9F342004094C6 /* test */ = {
 			isa = PBXGroup;
 			children = (
 				533EF91C17E9F365004094C6 /* main.cpp */,
 			);
-			name = "test_test";
+			name = test;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -92,7 +98,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				533EF90C17E9F2F7004094C6 /* test.h in Headers */,
+				53218B1118995B0E008181AE /* CUTest.h in Headers */,
+				53218B15189A8B03008181AE /* CUTestReport.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,8 +118,8 @@
 			);
 			dependencies = (
 			);
-			name = "common_test";
-			productName = "common_test";
+			name = common_test;
+			productName = common_test;
 			productReference = 533EF90317E9F252004094C6 /* libcommon_test.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
@@ -128,8 +135,8 @@
 			);
 			dependencies = (
 			);
-			name = "test_test";
-			productName = "test_test";
+			name = test_test;
+			productName = test_test;
 			productReference = 533EF91317E9F342004094C6 /* test_test */;
 			productType = "com.apple.product-type.tool";
 		};
@@ -142,7 +149,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "andrea michelotti";
 			};
-			buildConfigurationList = 533EF8FE17E9F252004094C6 /* Build configuration list for PBXProject "common_test" */;
+			buildConfigurationList = 533EF8FE17E9F252004094C6 /* Build configuration list for PBXProject "test" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -165,7 +172,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				533EF90D17E9F2F7004094C6 /* test.cpp in Sources */,
+				53218B1018995B0E008181AE /* CUTest.cpp in Sources */,
+				53218B14189A8B03008181AE /* CUTestReport.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,40 +248,83 @@
 		533EF90817E9F252004094C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
 				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"CHAOS=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/include";
+				INSTALL_PATH = "$(SRCROOT)/../../usr/local/lib";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/lib";
+				OBJROOT = "$(SRCROOT)/../../usr/local/lib";
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lboost_chrono",
+					"-lmemcached",
 					"-lboost_system",
 					"-lboost_thread",
 					"-lboost_program_options",
 					"-lboost_regex",
 					"-lboost_filesystem",
+					"-lmpio",
+					"-lmsgpack",
+					"-lmsgpack-rpc",
 					"-lboost_log",
 					"-lboost_log_setup",
+					"-lchaos_cutoolkit",
+					"-lchaos_common",
+					"-lcommon_powersupply",
+					"-lcommon_debug",
+					"-lcommon_serial",
+					"-ldriver_powersupply",
+					"-lchaos_uitoolkit",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(SRCROOT)/../../usr/local/include/common/test";
 			};
 			name = Debug;
 		};
 		533EF90917E9F252004094C6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/include";
+				INSTALL_PATH = "$(SRCROOT)/../../usr/local/lib";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/lib";
+				OBJROOT = "$(SRCROOT)/../../usr/local/lib";
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lboost_chrono",
+					"-lmemcached",
 					"-lboost_system",
 					"-lboost_thread",
 					"-lboost_program_options",
 					"-lboost_regex",
 					"-lboost_filesystem",
+					"-lmpio",
+					"-lmsgpack",
+					"-lmsgpack-rpc",
 					"-lboost_log",
 					"-lboost_log_setup",
+					"-lchaos_cutoolkit",
+					"-lchaos_common",
+					"-lcommon_powersupply",
+					"-lcommon_debug",
+					"-lcommon_serial",
+					"-ldriver_powersupply",
+					"-lchaos_uitoolkit",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(SRCROOT)/../../usr/local/include/common/test";
 			};
 			name = Release;
 		};
@@ -322,7 +373,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		533EF8FE17E9F252004094C6 /* Build configuration list for PBXProject "common_test" */ = {
+		533EF8FE17E9F252004094C6 /* Build configuration list for PBXProject "test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				533EF90517E9F252004094C6 /* Debug */,
@@ -338,6 +389,7 @@
 				533EF90917E9F252004094C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		533EF91917E9F342004094C6 /* Build configuration list for PBXNativeTarget "test_test" */ = {
 			isa = XCConfigurationList;
@@ -346,6 +398,7 @@
 				533EF91B17E9F342004094C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
