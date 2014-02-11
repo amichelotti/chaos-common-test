@@ -228,6 +228,7 @@ public:
             itest_running->second.to.us_duration =0;
             itest_running->second.to.repeat=0;
             boost::posix_time::ptime start=boost::posix_time::microsec_clock::local_time();
+	    PRINT("- %d Executing test \"%s\" %d\n",cnt_test,itest_running->first.c_str(),rep);
             while(rep-->0 && ((timeo_ms==0) || ((timeo_ms!=0)&&((boost::posix_time::microsec_clock::local_time()-start) < boost::posix_time::microsec(timeo_ms*1000))))){
                 int ret;
                 long long duration;
@@ -264,13 +265,14 @@ public:
                 itest_running->second.to.us_duration+=duration;
                 itest_running->second.to.repeat++;
                 DPRINT("End test \"%s\" duration %10llu us result =%d\n",itest_running->first.c_str(),duration,ret);
-                
-                
+
+		
                 if(!runall && errors) {
                     running =0;
                     return cnt_test;
                 }
             }
+	    PRINT("- %d END Test \"%s\" errs: %d, tot err: %d\n",cnt_test,itest_running->first.c_str(),itest_running->second.to.errors,errors);
             
             itest_running++;
             cnt_test++;
