@@ -250,6 +250,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libstdc++";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/usr/local/lib";
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = /;
 				EXECUTABLE_PREFIX = lib;
@@ -294,6 +295,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libstdc++";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/usr/local/lib";
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = /;
 				EXECUTABLE_PREFIX = lib;
@@ -331,7 +333,9 @@
 		533EF91A17E9F342004094C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/include";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/lib";
 				OTHER_LDFLAGS = (
@@ -352,7 +356,9 @@
 		533EF91B17E9F342004094C6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/include";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../usr/local/lib";
 				OTHER_LDFLAGS = (
