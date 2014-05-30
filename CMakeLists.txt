@@ -9,7 +9,7 @@ IF( ($ENV{CHAOS32}) OR (BUILD_FORCE_32) )
     set (CMAKE_LINK_FLAGS "-m32")
 ENDIF()
 
-if( DEFINED ENV{CHAOS_FRAMEWORK} ) 
+if( DEFINED ENV{CHAOS_FRAMEWORK} )
     MESSAGE(STATUS "Using $ENV{CHAOS_FRAMEWORK}")
       set (PROJECT_SOURCE_DIR $ENV{CHAOS_FRAMEWORK})
 ELSE()
@@ -20,7 +20,7 @@ set (CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/usr/local)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-     
+
 INCLUDE_DIRECTORIES(. ${PROJECT_SOURCE_DIR}/usr/local/include)
 LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/usr/local/lib)
 
@@ -35,7 +35,7 @@ ADD_LIBRARY(common_test SHARED ${test_src})
 TARGET_LINK_LIBRARIES(common_test chaos_cutoolkit
 	chaos_common boost_program_options boost_system boost_thread
 	boost_chrono boost_regex boost_log boost_log_setup
-	boost_atomic memcached msgpack msgpack-rpc mpio)
+	boost_atomic memcached)
 
 FILE(GLOB headers "*.h" )
 INSTALL(FILES ${headers} DESTINATION include/common/test)
