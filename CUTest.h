@@ -24,11 +24,10 @@ template <class T>
 class CUTest {
 protected:
     unsigned int devID;
-    std::string cu_name,mds_name;
+    std::string cu_name;
     long test_timeo;
 public:
     
-    int loglevel;
 
     typedef int (T::*cutestfn)(void* pn);
     typedef int (T::*cutestfn0)(void);
@@ -52,7 +51,7 @@ public:
     boost::thread th;
     int running;
 public:
-    CUTest(std::string cuname,std::string mdsname,int debug=0):cu_name(cuname),mds_name(mdsname),loglevel(debug){
+    CUTest(std::string cuname):cu_name(cuname){
         running = 0;        
     }
 
@@ -71,23 +70,8 @@ public:
     
     }
     int init(){
-        char tmpInitString[256];
         int err;
-        //log-level=debug\n
-        if(loglevel==0){
-            sprintf(tmpInitString, "metadata-server=%s\nlog-on-console=true\n", mds_name.c_str());
-            
-        } else {
-            sprintf(tmpInitString, "metadata-server=%s\nlog-on-console=true\nlog-level=debug\n", mds_name.c_str());
-        }
-        err = initToolkit(tmpInitString);
-        if (err != 0) {
-            DPRINT("Error initToolkit %d \"%s\"\n", err,tmpInitString);
-            return -1;
-        }
-        
-        DPRINT("Toolkit initialised \"%s\"\n",tmpInitString);
-        
+               
         
         err = getNewControllerForDeviceID(cu_name.c_str(), &devID);
         if (err != 0) {
