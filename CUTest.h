@@ -17,15 +17,32 @@
 #include <common/debug/debug.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #undef CHAOSFramework_UIToolkitCWrapper_h
+#include <chaos/ui_toolkit/ChaosUIToolkit.h>
+#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
+#include <chaos/ui_toolkit/HighLevelApi/HLDataApi.h>
+
 #include <chaos/ui_toolkit/ChaosUIToolkitCWrapper.h>
 #include "CUTestReport.h"
+#if 0
+#define PERFORM_CMD(x,y) \
+    err=controller->x (y);
 
+#else
+#define PERFORM_CMD(x,y) \
+    err=controller->x (y);\
+    if(err==chaos::ErrorCode::EC_TIMEOUT){  CHAOS_EXCEPTION(err,"Timeout performing " # x "() on "+cu_name);}\
+    if(err!=0){  CHAOS_EXCEPTION(err,"Error performing " # x "() on "+cu_name);}
+#endif
 template <class T>
 class CUTest {
 protected:
     unsigned int devID;
     std::string cu_name;
     long test_timeo;
+    chaos::ui::DeviceController *controller;
+       
+    chaos::CUStateKey::ControlUnitState device_state;
+
 public:
     
 
@@ -52,7 +69,14 @@ public:
     int running;
 public:
     CUTest(std::string cuname):cu_name(cuname){
-        running = 0;        
+        int err;
+        running = 0;   
+        controller = chaos::ui::HLDataApi::getInstance()->getControllerForDeviceID(cuname, 40000);
+        err=getNewControllerForDeviceID(cuname.c_str(), &devID);
+        if(controller == NULL || err!=0){
+            CHAOS_EXCEPTION(-100,"cannot allocate controller for:"+cuname);
+        }
+        controller->setRequestTimeWaith(5000000);
     }
 
     
@@ -71,33 +95,41 @@ public:
     }
     int init(){
         int err;
-               
-        
-        err = getNewControllerForDeviceID(cu_name.c_str(), &devID);
-        if (err != 0) {
-            DPRINT("Error getNewControllerForDeviceID for CU \"%s\" devID @x%x err: %d\n", cu_name.c_str(),devID,err);
-            return -2;
-        }
-        
-        err = setControllerTimeout((uint32_t)devID, 5000);
-        if (err != 0) {
-            DPRINT("Error setting error %d\n", err);
+        int retry=20;
+        if(!controller) {
+            CHAOS_EXCEPTION(-1,"MDS does not retrieved a valid controller for: "+cu_name);
             return -1;
         }
-        err = stopDevice(devID);
-        if (err != 0) {
-            DPRINT("Error setting stopping device error %d\n", err);
-            return -1;
-        }
-        err=deinitDevice(devID);
-        if (err != 0) {
-            DPRINT("Error setting deinit device error %d\n", err);
-            return -1;
-        }
+        do {
+            PERFORM_CMD(getState,device_state);
+            
+/*            err = controller->getState(device_state);
+            if(err == ErrorCode::EC_TIMEOUT){
+                CHAOS_EXCEPTION(-1,"Timeout getting state: "+cu_name);
+            }
+  */      
+            if(device_state == chaos::CUStateKey::DEINIT){
+                PERFORM_CMD(initDevice,);
+            } else if(device_state == chaos::CUStateKey::START){
+                PERFORM_CMD(stopDevice,);
+            } else if(device_state == chaos::CUStateKey::STOP){
+                PERFORM_CMD(deinitDevice,);
+            }
+            PRINT("%d] device state:%d\n",retry,device_state);
+            sleep(1);
+        } while((device_state!= chaos::CUStateKey::INIT)&& retry-- > 0);
         
-        return 0;
+        
+        if(retry>0){
+            PRINT("init state reached")
+            return 0;
+        }
+        DERR("cannot force in init state");
+        return -5;
+        //print_state(device_state);
+       
     }
-
+       
     void remTest(std::string tname){
         typename std::vector<std::pair<std::string,testfn> >::iterator itest;
         for(itest = test.begin();itest!=test.end();itest++){
@@ -110,54 +142,38 @@ public:
    
     int initTest(){
         int err;
-        err = initDevice(devID);
-        if (err != 0) {
-            DPRINT("Error initDevice %d\n", err);
-            return -1;
-        }
+        PERFORM_CMD(initDevice,);
         return 0;
     }
    
     int startTest(){
         int err;
-        err = startDevice(devID);
-        if (err != 0) {
-            DPRINT("Error startingDevice %d\n", err);
-            return -1;
-        }
+        PERFORM_CMD(startDevice,);
         return 0;
     }
     
  
     int stopTest(){
         int err;
-        err = stopDevice(devID);
-        if (err != 0) {
-            DPRINT("Error stopDevice %d\n", err);
-            return -1;
-        }
+        PERFORM_CMD(stopDevice,);
         return 0;
     }
     
  
     int deinitTest(){
         int err;
-        err = deinitDevice(devID);
-        if (err != 0) {
-            DPRINT("Error deinitDevice %d\n", err);
-            return -1;
-        }
+        PERFORM_CMD(deinitDevice,);
         return 0;
     }
   
     int aliveTest(){
         int err;
-        long long live=0,old_live=0;
+        uint64_t live=0,old_live=0;
         boost::posix_time::ptime start=boost::posix_time::microsec_clock::local_time();
         while((((live == old_live)|| (live == 0 ) || old_live ==0))&& ((test_timeo==0)|| ((boost::posix_time::microsec_clock::local_time() - start).total_microseconds() <  test_timeo*1000))){
-            err = fetchLiveData(devID);
+            controller->fetchCurrentDeviceValue();
             old_live = live;
-            err= getTimeStamp(devID,(uint64_t*)&live);
+            err= controller->getTimeStamp(live);
             if(err!=0) return err;
             //   DPRINT("alive returned %lld (%s) ret %d\n",live,boost::posix_time::to_simple_string(boost::posix_time::seconds(live)).c_str(),err);
         }
