@@ -40,11 +40,11 @@ protected:
     std::string cu_name;
     long test_timeo;
     chaos::ui::DeviceController *controller;
-       
+
     chaos::CUStateKey::ControlUnitState device_state;
 
 public:
-    
+
 
     typedef int (T::*cutestfn)(void* pn);
     typedef int (T::*cutestfn0)(void);
@@ -61,7 +61,7 @@ public:
         };
         testfn(){c=NULL;fn=NULL;timeo=0;repeat=1;priv=NULL;fn0=NULL;}
     };
-    
+
     std::vector<std::pair<std::string,testfn> > test;
     // running test
     typename std::vector<std::pair<std::string,testfn> >::iterator itest_running;
@@ -70,7 +70,7 @@ public:
 public:
     CUTest(std::string cuname):cu_name(cuname){
         int err;
-        running = 0;   
+        running = 0;
         controller = chaos::ui::HLDataApi::getInstance()->getControllerForDeviceID(cuname, 40000);
         err=getNewControllerForDeviceID(cuname.c_str(), &devID);
         if(controller == NULL || err!=0){
@@ -79,19 +79,19 @@ public:
         controller->setRequestTimeWaith(5000000);
     }
 
-    
+
     template<typename TT>
     void addTest(std::string tname,T*t,int (T::*fn)(TT*p),TT param,int timeo,int rep){
         TT* newparam=new TT;
         assert(newparam!=NULL);
         *newparam = param;
         test.push_back(std::make_pair(tname,testfn(t,(cutestfn)fn,NULL,timeo,rep,newparam)));
-        
+
     }
-    
+
     void addTest(std::string tname,T*t,cutestfn0 fn,int timeo,int rep){
         test.push_back(std::make_pair(tname,testfn(t,NULL,fn,timeo,rep,NULL)));
-    
+
     }
     int init(){
         int err;
@@ -102,12 +102,12 @@ public:
         }
         do {
             PERFORM_CMD(getState,device_state);
-            
+
 /*            err = controller->getState(device_state);
             if(err == ErrorCode::EC_TIMEOUT){
                 CHAOS_EXCEPTION(-1,"Timeout getting state: "+cu_name);
             }
-  */      
+  */
             if(device_state == chaos::CUStateKey::DEINIT){
                 PERFORM_CMD(initDevice,);
             } else if(device_state == chaos::CUStateKey::START){
@@ -118,18 +118,18 @@ public:
             PRINT("%d] device state:%d\n",retry,device_state);
             sleep(1);
         } while((device_state!= chaos::CUStateKey::INIT)&& retry-- > 0);
-        
-        
+
+
         if(retry>0){
-            PRINT("init state reached")
+            PRINT("init state reached");
             return 0;
         }
         DERR("cannot force in init state");
         return -5;
         //print_state(device_state);
-       
+
     }
-       
+
     void remTest(std::string tname){
         typename std::vector<std::pair<std::string,testfn> >::iterator itest;
         for(itest = test.begin();itest!=test.end();itest++){
@@ -138,34 +138,34 @@ public:
             }
         }
     }
-    
-   
+
+
     int initTest(){
         int err;
         PERFORM_CMD(initDevice,);
         return 0;
     }
-   
+
     int startTest(){
         int err;
         PERFORM_CMD(startDevice,);
         return 0;
     }
-    
- 
+
+
     int stopTest(){
         int err;
         PERFORM_CMD(stopDevice,);
         return 0;
     }
-    
- 
+
+
     int deinitTest(){
         int err;
         PERFORM_CMD(deinitDevice,);
         return 0;
     }
-  
+
     int aliveTest(){
         int err;
         uint64_t live=0,old_live=0;
@@ -182,28 +182,28 @@ public:
         return -1;
     }
     // return 0 if everithing ok
-    
+
     void runTestsBackGround(int runall,int loop=1){
         if(running){
             DERR("Test already running");
             return;
         }
         th = boost::thread(&CUTest::runTests,this,runall,loop);
-        
+
     }
-  
+
     int report(CUTestReport& tr){
         typename std::vector<std::pair<std::string,testfn> >::iterator itest;
         th.join();
-        
+
         for(itest =test.begin();itest!=test.end();itest++){
             tr.insert(itest->first,itest->second.to);
             tr.errors += itest->second.to.result?1:0;
         }
-        
+
         return tr.errors;
     }
- 
+
     int report(char*filename){
         int cnt;
         CUTestReport tr;
@@ -212,7 +212,7 @@ public:
         return cnt;
     }
     // run all the tests the index of the failing test
-  
+
     int runTests(int runall,int loop){
         int errors=0;
         int cnt_test=0;
@@ -237,12 +237,12 @@ public:
                     test_timeo = timeo_ms;
                 }
                 boost::posix_time::ptime start=boost::posix_time::microsec_clock::local_time();
-                
+
                 DPRINT("Starting test \"%s\" %d/%d at %10llu us\n",itest_running->first.c_str(),itest_running->second.repeat - rep,itest_running->second.repeat,(boost::posix_time::microsec_clock::local_time()- test_start).total_microseconds());
-                
+
                 //funct(itest_running->second.priv);
                 T* p =itest_running->second.c;
-                
+
                 if(itest_running->second.fn0){
                      cutestfn0 f =itest_running->second.fn0;
                      ret = (p->*f)();
@@ -254,8 +254,8 @@ public:
                     DERR("bad test function %s\n",itest_running->first.c_str());
                     break;
                 }
-                
-                
+
+
                 if(ret){
                     errors++;
                     itest_running->second.to.errors++;
@@ -266,26 +266,26 @@ public:
                 itest_running->second.to.repeat++;
                 DPRINT("End test \"%s\" duration %10llu us result =%d\n",itest_running->first.c_str(),duration,ret);
 
-		
+
                 if(!runall && errors) {
                     running =0;
                     return cnt_test;
                 }
             }
 	    PRINT("- %d END Test \"%s\" errs: %d, tot err: %d\n",cnt_test,itest_running->first.c_str(),itest_running->second.to.errors,errors);
-            
+
             itest_running++;
             cnt_test++;
         }
         }
         running =0;
         return errors;
-        
+
     }
-    
+
     std::string getCUname(){return cu_name;}
 
-    
+
     ~CUTest(){
         running = 0;
         for(itest_running=test.begin();itest_running!=test.end();itest_running++){
