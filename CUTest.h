@@ -14,7 +14,7 @@
 #include <boost/thread.hpp>
 #include <vector>
 #include <map>
-#include <common/debug/debug.h>
+#include <common/debug/core/debug.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #undef CHAOSFramework_UIToolkitCWrapper_h
 #include <chaos/ui_toolkit/ChaosUIToolkit.h>
