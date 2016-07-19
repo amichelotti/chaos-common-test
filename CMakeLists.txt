@@ -27,7 +27,7 @@ ENDIF()
 TARGET_LINK_LIBRARIES(common_test chaos_cutoolkit
 	chaos_common boost_program_options boost_system boost_thread
 	boost_chrono boost_regex boost_log boost_log_setup
-	boost_atomic memcached)
+	boost_atomic)
 
 FILE(GLOB headers "*.h" )
 INSTALL(FILES ${headers} DESTINATION include/common/test)
