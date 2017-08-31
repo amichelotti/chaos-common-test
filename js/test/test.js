@@ -109,7 +109,10 @@ cualive.forEach(function(elem){
 	});
 });
 	});
-	it('GET FULL LIVE STATUS',function(done){
+
+});
+describe('CHECK OVERALL STATUS',function(){
+    	it('GET FULL LIVE STATUS',function(done){
 			jchaos.getChannel(cualive,-1,function(data){
 				cualive_ds=data;
 				var check=JSON.stringify(data);
@@ -118,4 +121,4 @@ cualive.forEach(function(elem){
 			})
 	});
 
-});
+})
