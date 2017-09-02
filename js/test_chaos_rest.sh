@@ -3,7 +3,7 @@ start_test
 info_mesg "REST tests" " $0"
 if ! which node>&/dev/null;then
     if which nodejs >& /dev/null;then
-	info_msg "nodejs " "found"
+	info_mesg "nodejs " "found"
     else
 	end_test 1 "nodejs not found"
     fi
