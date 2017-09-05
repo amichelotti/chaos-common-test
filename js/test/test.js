@@ -127,7 +127,7 @@ describe('FUNCTIONAL KEY TEST',function(){
     this.timeout(15000);
     it('check for bypass key',function(){
 	cualive_ds.forEach(function(elem){
-//	    console.log(" --->"+JSON.stringify(elem));
+	    console.log(" --->"+JSON.stringify(elem));
 	    var check=JSON.stringify(elem.system);
 	    if(check.length>2 ){
 		if(elem.system.hasOwnProperty('cudk_bypass_state')== false){

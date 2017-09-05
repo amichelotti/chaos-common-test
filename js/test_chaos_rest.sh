@@ -12,7 +12,7 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 fi
 export USNAME=UnitServer
-if launch_us_cu 1 50 "" $USNAME TEST 1;then
+if launch_us_cu 1 52 "" $USNAME TEST 1;then
 	if ! check_proc $USNAME;then
 	    error_mesg "$USNAME quitted"
 	    end_test 1 "$USNAME quitted"
