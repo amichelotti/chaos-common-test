@@ -129,13 +129,13 @@ describe('FUNCTIONAL KEY TEST',function(){
 	cualive_ds.forEach(function(elem){
 	    console.log(" --->"+JSON.stringify(elem));
 	    var check=JSON.stringify(elem.system);
-	    if(check.length>2 ){
+	    if(elem.hasOwnProperty('system') ){
 		if(elem.system.hasOwnProperty('cudk_bypass_state')== false){
 		    console.log("missing bypass key in \""+JSON.stringify(elem.health.ndk_uid)+"\" all:"+JSON.stringify(elem.system));
 		}
-		assert.ok(elem.system.hasOwnProperty('cudk_bypass_state'), " cudk_bypass_state not present in "+elem.system.ndk_uid);
+		assert.ok(elem.system.hasOwnProperty('cudk_bypass_state'), " cudk_bypass_state not present in "+JSON.stringify(elem));
 	    } else {
-		console.log("\t%% missing system dataset in \"" +elem.health.ndk_uid+"\"");
+		console.log("\t%% missing system dataset in \"" +JSON.stringify(elem)+"\"");
 
 	    }
 	});
