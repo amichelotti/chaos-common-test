@@ -12,7 +12,7 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 fi
 export USNAME=UnitServer
-if launch_us_cu 1 52 $CHAOS_MDS $USNAME TEST 1;then
+if launch_us_cu 1 55 $CHAOS_MDS $USNAME TEST 1;then
 	if ! check_proc $USNAME;then
 	    error_mesg "$USNAME quitted"
 	    end_test 1 "$USNAME quitted"
@@ -24,8 +24,8 @@ if launch_us_cu 1 52 $CHAOS_MDS $USNAME TEST 1;then
 	end_test 1 "registration failed"
     fi
 
-# info_mesg "waiting " " 20s"
-# sleep 20
+info_mesg "waiting " " 20s"
+ sleep 20
 
 if ./node_modules/mocha/bin/mocha;then
     ok_mesg "mocha unit server tests"
