@@ -93,14 +93,18 @@ describe('CHECK LIVE DATASETS',function(){
 	    describe('['+elem+'] LIVE DATESET',function(){
 		it( '['+elem+'] should retrive a valid DATASET',function(done){
 		    jchaos.getChannel(elem,-1,function(data){
-			var ds=JSON.stringify(data);
+			var ds=JSON.stringify(data[0]);
 			JSON.parse(ds);
+			
 			var sys=JSON.stringify(data[0].system);
 			var healt=JSON.stringify(data[0].health);
 			var out=JSON.stringify(data[0].output);
 			var input=JSON.stringify(data[0].input);
 			// system and health should be present
-			//console.log("bytes:"+ds.length+" sys:"+sys + " health:"+healt.length);
+			console.log("\tsystem:"+sys);
+			console.log("\thealth:"+healt);
+			console.log("\tinput:"+input);
+			console.log("\toutput:"+out);
 			done((ds.length<2)|| (sys.length<2)|| (healt.length<2)|| (out.length<2)|| (input.length<2)) ;
 		    });
 
@@ -127,7 +131,6 @@ describe('FUNCTIONAL KEY TEST',function(){
     this.timeout(15000);
     it('check for bypass key',function(){
 	cualive_ds.forEach(function(elem){
-	    console.log(" --->"+JSON.stringify(elem));
 	    var check=JSON.stringify(elem.system);
 	    if(elem.hasOwnProperty('system') ){
 		if(elem.system.hasOwnProperty('cudk_bypass_state')== false){
