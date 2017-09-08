@@ -28,7 +28,8 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 	end_test 1 "registration failed"
     fi
 
-
+info_mesg "waiting 10s ..."
+sleep 10
 if ./node_modules/mocha/bin/mocha;then
     ok_mesg "mocha unit server tests"
     stop_proc $USNAME
