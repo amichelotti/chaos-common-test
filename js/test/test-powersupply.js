@@ -166,6 +166,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 		});
 		var tot_ok=0;
 
+		
 		function checkBusy(devlist,retry,okhandle,nokhandle){
 			tot_ok=0;
 		//	console.log(" check busy of" +devlist);
@@ -208,7 +209,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 							var error=0;
 							var retry=5;
 							jchaos.snapshot(snap,"restore","","",function(d){
-								checkBusy(btf,10,function(){
+								jchaos.checkLive(btf,10,5000,function(ds){return (ds.output.busy == false);},function(){
 									jchaos.getChannel(btf,-1,function(data){
 										data.forEach(function(elem){
 											var expected=snapinfo[snap];
