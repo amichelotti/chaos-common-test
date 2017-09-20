@@ -30,13 +30,16 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 
 info_mesg "waiting 10s ..."
 sleep 10
-if ./node_modules/mocha/bin/mocha;then
-    ok_mesg "mocha unit server tests"
+tests="test-live.js test_powersupply.js"
+for t in $tests;do
+if ./node_modules/mocha/bin/mocha test/$t;then
+    ok_mesg "mocha unit server test $t"
     stop_proc $USNAME
     end_test 0
 else
     stop_proc $USNAME
-    nok_mesg "REST tests"
+    nok_mesg "mocha unit server test $t"
     end_test 1 "REST tests"
 fi
 
+done
