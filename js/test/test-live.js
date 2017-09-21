@@ -269,7 +269,7 @@ describe("CHAOS LIVE TESTS",function(){
 					done(some_error);
 
 				});
-			},6000);
+			},10000);
 
 		});
 	});
