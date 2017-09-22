@@ -99,7 +99,7 @@ describe("CHAOS LIVE TESTS",function(){
 	}
 
 	describe('LIVE TEST',function(){
-		this.timeout(15000);
+		this.timeout(60000);
 
 		it('all live dataset should be valid',function(){
 			cualive.forEach(function(elem){
