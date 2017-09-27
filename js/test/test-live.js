@@ -99,7 +99,7 @@ describe("CHAOS LIVE TESTS",function(){
 	}
 
 	describe('LIVE TEST',function(){
-		this.timeout(15000);
+		this.timeout(60000);
 
 		it('all live dataset should be valid',function(){
 			cualive.forEach(function(elem){
@@ -276,7 +276,7 @@ describe("CHAOS LIVE TESTS",function(){
 
 /*
 	describe('STATUS Transition Test ',function(){
-		this.timeout(15000);
+		this.timeout(60000);
 		it('check Start->Stop',function(done){
 			var cu_in_start=[];
 			var cu_in_stop=[];

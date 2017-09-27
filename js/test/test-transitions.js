@@ -34,7 +34,7 @@ jchaos.setOptions(options);
 
 
 describe('CHAOS TEST POWERSUPPLY',function(){
-	this.timeout(15000);
+	this.timeout(60000);
 	it('check Start->Stop',function(done){
 		var cu_in_start=[];
 		var cu_in_stop=[];

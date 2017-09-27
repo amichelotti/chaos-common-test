@@ -60,7 +60,7 @@ var snapshot_dataset_list=[];
 
 describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 	var snapinfo= new Object;
-	this.timeout(15000);
+	this.timeout(60000);
 	it('retriving BTF QUADRUPOLES/DIPOLE',function(done){
 		jchaos.search(["BTF/QUADRUPOLE","BTF/DIPOLE]"],"cu",true,function(data){
 			btf=data;
