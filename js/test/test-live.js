@@ -245,8 +245,8 @@ describe("CHAOS LIVE TESTS",function(){
 					//console.log("\t ["+cu_in_start+"] :"+JSON.stringify(data));
 
 					data.forEach(function(elem){
-						//	console.log("\t ->"+Number(elem.nh_ts.$numberLong)+ " string:"+elem.nh_ts.$numberLong);
-						cu_timestamp.push(Number(elem.nh_ts.$numberLong));
+						//	console.log("\t ->"+Number(elem.nh_ts)+ " string:"+elem.nh_ts);
+						cu_timestamp.push(Number(elem.nh_ts));
 					});
 				});
 
@@ -255,7 +255,7 @@ describe("CHAOS LIVE TESTS",function(){
 				var some_error=0;
 				jchaos.getChannel(cu_in_start,4,function(data){
 					data.forEach(function(elem){
-						cu_new_timestamp.push(Number(elem.nh_ts.$numberLong));
+						cu_new_timestamp.push(Number(elem.nh_ts));
 					});
 					for(var i=0;i<cu_new_timestamp.length;i++){
 						if(cu_new_timestamp[i]-cu_timestamp[i]<5000){
