@@ -118,13 +118,13 @@ describe("CHAOS LIVE TESTS",function(){
 							var sys=JSON.stringify(data[0].system);
 							var healt=JSON.stringify(data[0].health);
 							var out=JSON.stringify(data[0].output);
-							var input=JSON.stringify(data[0].input);
+						    //var input=JSON.stringify(data[0].input);
 							// system and health should be present
 							//	console.log("\tsystem:"+sys);
 							//console.log("\thealth:"+healt);
 							//	console.log("\tinput:"+input);
 							//	console.log("\toutput:"+out);
-							done((ds.length<2)|| (sys.length<2)|| (healt.length<2)|| (out.length<2)|| (input.length<2)) ;
+							done((ds.length<2)|| (sys.length<2)|| (healt.length<2)|| (out.length<2)) ;
 						});
 
 					});
