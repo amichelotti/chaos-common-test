@@ -2,145 +2,117 @@ var assert = require('assert');
 //var assert = require('chai').assert;
 
 var jchaos = require('jchaos.js');
-options={};
+options = {};
 
 process.argv.forEach(function (val, index, array) {
 
-	if(val=="uri"){
-		options.uri=array[index+1];
-		console.log(val+"="+ array[index+1]);
+	if (val == "uri") {
+		options.uri = array[index + 1];
+		console.log(val + "=" + array[index + 1]);
 	}
-	if(val=="async"){
-		options.async=(array[index+1]=="true");
-		console.log(val+"="+ array[index+1]);
+	if (val == "async") {
+		options.async = (array[index + 1] == "true");
+		console.log(val + "=" + array[index + 1]);
 	}
-	if(val=="npush"){
-		npush=(array[index+1]);
-		console.log(val+"="+ array[index+1]);
+	if (val == "npush") {
+		npush = (array[index + 1]);
+		console.log(val + "=" + array[index + 1]);
 	}
 });
 
-var cualive=[];
-var status_to_check=["Start","Stop","Init","Deinit","Fatal Error", "Recoverable Error"];
-var cualive_by_status=[];
+var cualive = [];
+var status_to_check = ["Start", "Stop", "Init", "Deinit", "Fatal Error", "Recoverable Error"];
+var cualive_by_status = [];
 
-var cualive_ds=[];
-var cu_all=[];
-var class_alive=[];
-var class_all=[];
-var zone_alive=[];
-var zone_all=[];
+var cualive_ds = [];
+var cu_all = [];
+var class_alive = [];
+var class_all = [];
+var zone_alive = [];
+var zone_all = [];
+var tot_ok = 0;
+
 jchaos.setOptions(options);
 
 
-describe('CHAOS TEST POWERSUPPLY',function(){
+describe('CHAOS TEST TRANSITIONS', function () {
 	this.timeout(60000);
-	it('check Start->Stop',function(done){
-		var cu_in_start=[];
-		var cu_in_stop=[];
-		jchaos.getCUStatus("Start",function(ll){
-			console.log("N. CU in Start:"+ll.length);
-			cu_in_start=ll;
-			if(cu_in_start.length==0)
+	it('check Start->Stop', function (done) {
+		var cu_status = [];
+		jchaos.getCUStatus("Start", function (ll) {
+			console.log("N. CU in Start:" + ll.length);
+			cu_status = ll;
+			if (cu_status.length == 0)
 				done();
-			jchaos.forceState(cu_in_start,"Stop",function(d){
-
-			});
-			setTimeout(function(){
-
-				var some_error=0;
-				jchaos.getChannel(cu_in_start,4,function(data){
-					if(!(data instanceof Array)){
-						console.error("should be an array:'"+JSON.stringify(data)+"'");
-						done(1);
-						return;
-					}
-					data.forEach(function(elem){
-						//	console.log("==>"+JSON.stringify(elem));
-						if(elem.health.nh_status != "Stop"){
-							some_error++;
-							console.error(" Transition Start->Stop of "+elem.health.ndk_uid + " failed state is '"+elem.health.nh_status+"'" );
-						}				
-					});
-
-					done(some_error);
-
-				});
-			},2000);		
+			jchaos.sendCUCmd(cu_status, "stop", "", null);
+			jchaos.checkLive(cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
 		});
-
 	});
-	/*	it('check Stop->Start',function(done){
-
-		var cu_in_start=[];
-		var cu_in_stop=[];
-		jchaos.getCUStatus("Stop",function(ll){
-			console.log("N. CU in Stop:"+ll.length);
-			cu_in_state=ll;
-			if(ll.length==0)
+	it('check Stop->Deinit', function (done) {
+		var cu_status = [];
+		jchaos.getCUStatus("Stop", function (ll) {
+			console.log("N. CU in Stop:" + ll.length);
+			cu_status = ll;
+			if (cu_status.length == 0)
 				done();
-			jchaos.forceState(cu_in_state,"Start",function(d){
-				setTimeout(function(){
-					var some_error=0;
-					jchaos.getChannel(cu_in_state,4,function(data){
-						if(!( data instanceof Array)){
-							console.error("should be an array:'"+JSON.stringify(data)+"'");
-							done(1);
-							return;
-						}
-						data.forEach(function(elem){
-							console.log("["+cu_in_state+"]=+>"+JSON.stringify(elem));
+			jchaos.sendCUCmd(cu_status, "deinit", "", null);
+			jchaos.checkLive(cu_status, 10, 1000, function (ds) { return (ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
 
-							if(elem.health.nh_status != "Start"){
-								some_error++;
-								console.error(" Transition Stop->Start of "+elem.health.ndk_uid + " failed state is '"+elem.health.nh_status+"'" );
-							}				
-						});
-
-						done(some_error);
-
-					});
-				},2000);
-			});
 		});
-
 	});
-	 */
-	/*	it('check Stop->Deinit',function(done){
-
-		var cu_in_start=[];
-		var cu_in_stop=[];
-		jchaos.getCUStatus("Stop",function(ll){
-			console.log("N. CU in Stop:"+ll.length);
-			cu_in_state=ll;
-			if(ll.length==0)
+	it('check Deinit->Unload', function (done) {
+		var cu_status = [];
+		jchaos.getCUStatus("Deinit", function (ll) {
+			console.log("N. CU in Deinit:" + ll.length);
+			cu_status = ll;
+			if (cu_status.length == 0)
 				done();
-			jchaos.forceState(cu_in_state,"Deinit",function(d){
-				setTimeout(function(){
-					var some_error=0;
-					jchaos.getChannel(cu_in_state,4,function(data){
-						if(!( data instanceof Array)){
-							console.error("should be an array:'"+JSON.stringify(data)+"'");
-							done(1);
-							return;
-						}
-						data.forEach(function(elem){
-							console.log("["+cu_in_state+"]=+>"+JSON.stringify(elem));
-
-							if(elem.health.nh_status != "Deinit"){
-								some_error++;
-								console.error(" Transition Stop->Deinit of "+elem.health.ndk_uid + " failed state is '"+elem.health.nh_status+"'" );
-							}				
-						});
-
-						done(some_error);
-
-					});
-				},2000);
+			cu_status.forEach(function (elem) {
+				jchaos.loadUnload(elem, false, null);
 			});
+			jchaos.checkLive(cu_status, 10, 1000, function (ds) { return (ds.health.nh_status == "Unload"); }, function () { done(0); }, function () { done(1) });
+
 		});
+	});
+	it('check Unload->Load', function (done) {
+		var cu_status = [];
+		jchaos.getCUStatus("Unload", function (ll) {
+			console.log("N. CU in Unload:" + ll.length);
+			cu_status = ll;
+			if (cu_status.length == 0)
+				done();
+			cu_status.forEach(function (elem) {
+				jchaos.loadUnload(elem, true, null);
+			});
+			jchaos.checkLive(cu_status, 10, 1000, function (ds) { return (ds.health.nh_status == "Load"); }, function () { done(0); }, function () { done(1) });
 
-	});*/
+		});
+	});
+	it('check Load->Init', function (done) {
+		var cu_status = [];
+		jchaos.getCUStatus("Load", function (ll) {
+			console.log("N. CU in Load:" + ll.length);
+			cu_status = ll;
+			if (cu_status.length == 0)
+				done();
+			jchaos.sendCUCmd(cu_status, "init", "", null);
 
+			jchaos.checkLive(cu_status, 10, 1000, function (ds) { return (ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
+
+		});
+	});
+	it('check Init->Start', function (done) {
+		var cu_status = [];
+		jchaos.getCUStatus("Init", function (ll) {
+			console.log("N. CU in Init:" + ll.length);
+			cu_status = ll;
+			if (cu_status.length == 0)
+				done();
+			jchaos.sendCUCmd(cu_status, "start", "", null);
+
+			jchaos.checkLive(cu_status, 10, 1000, function (ds) { return (ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
+
+		});
+	});
 });
 
