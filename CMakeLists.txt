@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(common_test)
-
+find_package(Boost MODULE REQUIRED REQUIRED COMPONENTS program_options system)
+include_directories(../.. ${Boost_INCLUDE_DIRS})
 #### put your libcommon_test LIBRARY files here
 SET(test_src CUTestReport.cpp CUTest.cpp )
 ###
