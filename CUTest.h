@@ -16,11 +16,9 @@
 #include <map>
 #include <common/debug/core/debug.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#undef CHAOSFramework_UIToolkitCWrapper_h
 
 #include <chaos_metadata_service_client/ChaosMetadataServiceClient.h>
 
-#include <chaos/ui_toolkit/ChaosUIToolkitCWrapper.h>
 #include "CUTestReport.h"
 #if 0
 #define PERFORM_CMD(x,y) \
@@ -231,7 +229,7 @@ public:
                 int ret;
                 long long duration;
                 if(timeo_ms>0){
-                    setControllerTimeout((uint32_t)devID, timeo_ms);
+               //     setControllerTimeout((uint32_t)devID, timeo_ms);
                     test_timeo = timeo_ms;
                 }
                 boost::posix_time::ptime start=boost::posix_time::microsec_clock::local_time();
