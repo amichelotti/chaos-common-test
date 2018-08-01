@@ -33,6 +33,8 @@ var zone_all=[];
 jchaos.setOptions(options);
 
 describe("CHAOS LIVE TESTS",function(){
+	this.timeout(60000);
+
 	describe('SEARCH',function(){
 
 		it('SEARCH ALIVE CU array not null array of names',function(done){
