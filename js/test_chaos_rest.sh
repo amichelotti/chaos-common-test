@@ -52,7 +52,7 @@ errors=0
 # tests="test-live.js test-jsoncu.js test-powersupply.js test-transitions.js"
 tests="test-live.js test-jsoncu.js test-powersupply.js"
 for t in $tests;do
-if ./node_modules/mocha/bin/mocha test/$t;then
+if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t;then
     ok_mesg "mocha unit server test $t"
 
 else
