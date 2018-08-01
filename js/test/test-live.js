@@ -106,8 +106,8 @@ describe("CHAOS LIVE TESTS", function () {
 		it('all live dataset should be valid', function () {
 			cualive.forEach(function (elem) {
 				describe('[' + elem + '] LIVE DATESET', function (done) {
-					this.timeout(60000);
 					it('[' + elem + '] should retrive a valid DATASET', function (done) {
+						this.timeout(60000);
 						jchaos.getChannel(elem, -1, function (data) {
 							var ds = JSON.stringify(data[0]);
 							try {
@@ -160,6 +160,8 @@ describe("CHAOS LIVE TESTS", function () {
 
 		});
 		it('check for bypass key', function () {
+			this.timeout(60000);
+
 			cualive_ds.forEach(function (elem) {
 
 				var check = JSON.stringify(elem.system);
@@ -177,6 +179,8 @@ describe("CHAOS LIVE TESTS", function () {
 
 		});
 		it('check for bypass command set TRUE', function (done) {
+			this.timeout(60000);
+
 			// make it on started CU
 			var cu_in_start = [];
 			jchaos.getCUStatus("Start", function (ll) {
@@ -207,6 +211,8 @@ describe("CHAOS LIVE TESTS", function () {
 	*/
 		});
 		it('check for bypass command set FALSE', function (done) {
+			this.timeout(60000);
+
 			// make it on started CU
 			var cu_in_start = [];
 			jchaos.getCUStatus("Start", function (ll) {
@@ -239,6 +245,8 @@ describe("CHAOS LIVE TESTS", function () {
 		});
 
 		it('check for health updates every 5s', function (done) {
+			this.timeout(60000);
+
 			// make it on started CU
 			var cu_in_start = [];
 			jchaos.getCUStatus("Start", function (ll) {
