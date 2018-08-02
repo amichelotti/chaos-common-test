@@ -108,7 +108,7 @@ describe("CHAOS LIVE TESTS", function () {
 				describe('[' + elem + '] LIVE DATESET', function (done) {
 					it('[' + elem + '] should retrive a valid DATASET', function (done) {
 						this.timeout(60000);
-						jchaos.getChannel(elem, -1, function (data) {
+						/* jchaos.getChannel(elem, -1, function (data) {
 							var ds = JSON.stringify(data[0]);
 							try {
 								JSON.parse(ds);
@@ -121,14 +121,24 @@ describe("CHAOS LIVE TESTS", function () {
 							var sys = JSON.stringify(data[0].system);
 							var healt = JSON.stringify(data[0].health);
 							var out = JSON.stringify(data[0].output);
-							//var input=JSON.stringify(data[0].input);
-							// system and health should be present
-							//	console.log("\tsystem:"+sys);
-							//console.log("\thealth:"+healt);
-							//	console.log("\tinput:"+input);
-							//	console.log("\toutput:"+out);
 							done((ds.length < 2) || (sys.length < 2) || (healt.length < 2) || (out.length < 2));
-						});
+						}); */
+						data= jchaos.getChannel(elem, -1, null);
+						
+							var ds = JSON.stringify(data[0]);
+							try {
+								JSON.parse(ds);
+							} catch (err) {
+								console.error("error: '" + err + "' parsing:'" + ds + "'");
+								done(true);
+								return;
+							}
+
+							var sys = JSON.stringify(data[0].system);
+							var healt = JSON.stringify(data[0].health);
+							var out = JSON.stringify(data[0].output);
+							done((ds.length < 2) || (sys.length < 2) || (healt.length < 2) || (out.length < 2));
+					
 
 					});
 				});
@@ -136,11 +146,9 @@ describe("CHAOS LIVE TESTS", function () {
 
 		});
 		it('GET FULL LIVE STATUS', function (done) {
-			jchaos.getChannel(cualive, -1, function (data) {
-				cualive_ds = data;
-				var check = JSON.stringify(data);
-				done((check.length < 2) || (data.length != cualive.length));
-			});
+			cualive_ds=jchaos.getChannel(cualive, -1, null);
+			var check = JSON.stringify(cualive_ds);
+			done((check.length < 2) || (cualive_ds.length != cualive.length));
 		});
 		it('RETRIVE CU status', function () {
 
@@ -187,7 +195,7 @@ describe("CHAOS LIVE TESTS", function () {
 				cu_in_start = ll;
 				cu_in_start.forEach(function (elem) {
 					//	console.log("\t ["+elem+"] set bypass false");
-					jchaos.setBypass(elem, true, function (d) { });
+					jchaos.setBypass(elem, true, function(d){});
 
 				});
 				jchaos.checkLive(cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
@@ -219,7 +227,7 @@ describe("CHAOS LIVE TESTS", function () {
 				cu_in_start = ll;
 				cu_in_start.forEach(function (elem) {
 					//	console.log("\t ["+elem+"] set bypass false");
-					jchaos.setBypass(elem, false, function (d) { });
+					jchaos.setBypass(elem, false, function(d){});
 
 				});
 				jchaos.checkLive(cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });

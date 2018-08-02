@@ -60,8 +60,9 @@ var snapshot_dataset_list=[];
 
 describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 	var snapinfo= new Object;
-	this.timeout(60000);
 	it('retriving BTF QUADRUPOLES/DIPOLE',function(done){
+		this.timeout(60000);
+
 		jchaos.search(["BTF/QUADRUPOLE","BTF/DIPOLE]"],"cu",true,function(data){
 			btf=data;
 			done(btf.length<=0);
@@ -69,6 +70,8 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 	});
 	describe('preparing snapshots',function(){
 		it('zero-stby',function(done){
+			this.timeout(60000);
+
 			var snapshot_set=[];
 			var nok=btf.length;
 			var polarity=1;
@@ -102,6 +105,8 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 
 		});
 		it('2-increments-oper',function(done){
+			this.timeout(60000);
+
 			var snapshot_set=[];
 			var nok=btf.length;
 			//powersupply_setpoint.input.stby=0;
@@ -138,6 +143,8 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 
 		});
 		it('check for snapshots in the system',function(done){
+			this.timeout(60000);
+
 			var snapshot_list=[];
 
 			jchaos.search("","snapshots",false,function(data){
@@ -201,6 +208,8 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 		}
 		describe("checking snapshot restores",function(){
 			it('restore all snapshots',function(){
+				this.timeout(60000);
+
 				prepared_snapshot.forEach(function(snap){
 					describe(' restore '+snap,function(){
 						this.timeout(60000);
