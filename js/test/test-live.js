@@ -106,7 +106,7 @@ describe("CHAOS LIVE TESTS", function () {
 		it('all live dataset should be valid', function () {
 			cualive.forEach(function (elem) {
 				describe('[' + elem + '] LIVE DATESET', function (done) {
-					it('[' + elem + '] should retrive a valid DATASET', function (done) {
+					it('[' + elem + '] should retrive a valid DATASET', function () {
 						this.timeout(60000);
 						/* jchaos.getChannel(elem, -1, function (data) {
 							var ds = JSON.stringify(data[0]);
@@ -137,7 +137,7 @@ describe("CHAOS LIVE TESTS", function () {
 							var sys = JSON.stringify(data[0].system);
 							var healt = JSON.stringify(data[0].health);
 							var out = JSON.stringify(data[0].output);
-							done((ds.length < 2) || (sys.length < 2) || (healt.length < 2) || (out.length < 2));
+							assert.ok(!((ds.length < 2) || (sys.length < 2) || (healt.length < 2) || (out.length < 2)));
 					
 
 					});
@@ -145,10 +145,10 @@ describe("CHAOS LIVE TESTS", function () {
 			});
 
 		});
-		it('GET FULL LIVE STATUS', function (done) {
+		it('GET FULL LIVE STATUS', function () {
 			cualive_ds=jchaos.getChannel(cualive, -1, null);
 			var check = JSON.stringify(cualive_ds);
-			done((check.length < 2) || (cualive_ds.length != cualive.length));
+			assert.ok(!((check.length < 2) || (cualive_ds.length != cualive.length)));
 		});
 		it('RETRIVE CU status', function () {
 
@@ -198,7 +198,7 @@ describe("CHAOS LIVE TESTS", function () {
 					jchaos.setBypass(elem, true, function(d){});
 
 				});
-				jchaos.checkLive(cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
+				jchaos.checkLive('check for bypass command set TRUE',cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
 
 			});
 			/*	setTimeout(function(){
@@ -230,7 +230,7 @@ describe("CHAOS LIVE TESTS", function () {
 					jchaos.setBypass(elem, false, function(d){});
 
 				});
-				jchaos.checkLive(cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
+				jchaos.checkLive('check for bypass command set FALSE',cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
 
 			});
 

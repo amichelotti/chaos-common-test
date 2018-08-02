@@ -45,7 +45,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 			if (cu_status.length == 0)
 				done();
 			jchaos.sendCUCmd(cu_status, "stop", "", null);
-			jchaos.checkLive(cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check Start->Stop',cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
 		});
 	});
 	it('check Stop->Deinit', function (done) {
@@ -57,7 +57,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 				done();
 //		    jchaos.sendCUCmd(cu_status, "deinit", "", null);
 		    jchaos.node(cu_status, "deinit", "cu", null, null);
-			jchaos.checkLive(cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check Stop->Deinit',cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -111,7 +111,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 				done();
 //		    jchaos.sendCUCmd(cu_status, "deinit", "", null);
 		    jchaos.node(cu_status, "init", "cu", null, null);
-		    jchaos.checkLive(cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
+		    jchaos.checkLive('check Deinit->Init',cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -125,7 +125,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 				done();
 			jchaos.sendCUCmd(cu_status, "start", "", null);
 
-			jchaos.checkLive(cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check Init->Start',cu_status, 10, 5000, function (ds) { return (ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
