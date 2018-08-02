@@ -167,56 +167,86 @@ describe("CHAOS LIVE TESTS", function () {
 			});
 
 		});
-		it('check for bypass key', function () {
-			this.timeout(60000);
-
-			cualive_ds.forEach(function (elem) {
-
-				var check = JSON.stringify(elem.system);
-				if (elem.hasOwnProperty('system') && elem.hasOwnProperty('health')) {
-
-					if (elem.system.hasOwnProperty('cudk_bypass_state') == false) {
-						console.log("\tmissing bypass key in \"" + JSON.stringify(elem.health.ndk_uid) + "\" all:" + JSON.stringify(elem.system));
+		
+		describe('Bypass Test', function(){
+			it('check for bypass key', function () {
+				this.timeout(60000);
+	
+				cualive_ds.forEach(function (elem) {
+	
+					var check = JSON.stringify(elem.system);
+					if (elem.hasOwnProperty('system') && elem.hasOwnProperty('health')) {
+	
+						if (elem.system.hasOwnProperty('cudk_bypass_state') == false) {
+							console.log("\tmissing bypass key in \"" + JSON.stringify(elem.health.ndk_uid) + "\" all:" + JSON.stringify(elem.system));
+						}
+						if ((elem.health.nh_status == "Start")) {
+							assert.ok(elem.system.hasOwnProperty('cudk_bypass_state'), " cudk_bypass_state not present in " + JSON.stringify(elem));
+						}
 					}
-					if ((elem.health.nh_status == "Start")) {
-						assert.ok(elem.system.hasOwnProperty('cudk_bypass_state'), " cudk_bypass_state not present in " + JSON.stringify(elem));
-					}
-				}
+				});
+				assert.ok(true);
+	
 			});
-			assert.ok(true);
-
-		});
-		it('check for bypass command set TRUE', function (done) {
+			it('bypass command set TRUE', function (done) {
+				this.timeout(60000);
+	
+				// make it on started CU
+				var cu_in_start = [];
+				var num=0;
+				jchaos.getCUStatus("Start", function (ll) {
+					cu_in_start = ll;
+					cu_in_start.forEach(function (elem) {
+						//	console.log("\t ["+elem+"] set bypass false");
+						jchaos.setBypass(elem, true, function(d){num++;});
+	
+					});
+					setTimeout(function(){
+						if(num==cu_in_start.length){
+							done(false);
+						} else {
+							console.log("failed commands ok:"+num+"/"+cu_in_start.length);
+							done(true);
+						}
+					},2000);	
+				});
+					
+			});
+			it('check for bypass command set TRUE', function (done) {
 			this.timeout(60000);
 
 			// make it on started CU
 			var cu_in_start = [];
 			jchaos.getCUStatus("Start", function (ll) {
 				cu_in_start = ll;
-				cu_in_start.forEach(function (elem) {
-					//	console.log("\t ["+elem+"] set bypass false");
-					jchaos.setBypass(elem, true, function(d){});
-
-				});
-				jchaos.checkLive('check for bypass command set TRUE',cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
+				jchaos.checkLive('check for bypass command set TRUE',cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == true); }, function () { done(0); }, function () { done(1); });
 
 			});
-			/*	setTimeout(function(){
-					jchaos.getChannel(cu_in_start,3,function(data){
-						var some_error=0;
-						data.forEach(function(elem){
-							//	console.log("=====>" + JSON.stringify(elem));
-							if(elem.cudk_bypass_state != true){
-								console.error("\t["+elem.ndk_uid+"] bypass not set to 'true' "+ JSON.stringify(data[0]));
-								some_error++;
-							} else{
-								//console.log("\t["+elem.ndk_uid+"] setting bypass TRUE ok ");
-							}
-						});
-						done(some_error);
-					});
+			
+		});
+		it('bypass command set FALSE', function (done) {
+			this.timeout(60000);
+
+			// make it on started CU
+			var cu_in_start = [];
+			var num=0;
+			jchaos.getCUStatus("Start", function (ll) {
+				cu_in_start = ll;
+				cu_in_start.forEach(function (elem) {
+					//	console.log("\t ["+elem+"] set bypass false");
+					jchaos.setBypass(elem, false, function(d){num++;});
+
+				});	
+				setTimeout(function(){
+					if(num==cu_in_start.length){
+						done(false);
+					} else {
+						console.log("failed commands ok:"+num+"/"+cu_in_start.length);
+						done(true);
+					}
 				},2000);
-	*/
+			});
+				
 		});
 		it('check for bypass command set FALSE', function (done) {
 			this.timeout(60000);
@@ -225,32 +255,14 @@ describe("CHAOS LIVE TESTS", function () {
 			var cu_in_start = [];
 			jchaos.getCUStatus("Start", function (ll) {
 				cu_in_start = ll;
-				cu_in_start.forEach(function (elem) {
-					//	console.log("\t ["+elem+"] set bypass false");
-					jchaos.setBypass(elem, false, function(d){});
-
-				});
 				jchaos.checkLive('check for bypass command set FALSE',cu_in_start, 10, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
 
 			});
 
-			/*	setTimeout(function(){
-					jchaos.getChannel(cu_in_start,3,function(data){
-						var some_error=0;
-						data.forEach(function(elem){
-							//	console.log("=====>" + JSON.stringify(elem));
-							if(elem.cudk_bypass_state != false){
-								console.error("\t["+elem.ndk_uid+"] bypass not set to 'false' "+ JSON.stringify(data[0]));
-								some_error++;
-							} else{
-								//	console.log("\t["+elem.ndk_uid+"] setting bypass FALSE ok ");
-							}
-						});
-						done(some_error);
-					});
-				},2000);
-	*/
 		});
+
+	});
+
 
 		it('check for health updates every 5s', function (done) {
 			this.timeout(60000);
