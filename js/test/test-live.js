@@ -40,6 +40,9 @@ describe("CHAOS LIVE TESTS", function () {
 		it('SEARCH ALIVE CU array not null array of names', function (done) {
 			jchaos.search("", "cu", true, function (data) {
 				cualive = data;
+				jchaos.getCUStatus("Start", function (ll) {
+	
+				});
 				done(data.length <= 0);
 
 
@@ -102,49 +105,33 @@ describe("CHAOS LIVE TESTS", function () {
 
 	describe('LIVE TEST', function () {
 		this.timeout(60000);
+		var cu_in_start = [];
+		
+			// make it on started CU
+		it('RETRIVE CU IN START', function (done) {
+			console.log("Waiting 10s");
 
-		it('all live dataset should be valid', function () {
-			cualive.forEach(function (elem) {
-				describe('[' + elem + '] LIVE DATESET', function (done) {
-					it('[' + elem + '] should retrive a valid DATASET', function () {
-						this.timeout(60000);
-						/* jchaos.getChannel(elem, -1, function (data) {
-							var ds = JSON.stringify(data[0]);
-							try {
-								JSON.parse(ds);
-							} catch (err) {
-								console.error("error: '" + err + "' parsing:'" + ds + "'");
-								done(true);
-								return;
-							}
+			setTimeout(function(){
 
-							var sys = JSON.stringify(data[0].system);
-							var healt = JSON.stringify(data[0].health);
-							var out = JSON.stringify(data[0].output);
-							done((ds.length < 2) || (sys.length < 2) || (healt.length < 2) || (out.length < 2));
-						}); */
-						data= jchaos.getChannel(elem, -1, null);
-						
-							var ds = JSON.stringify(data[0]);
-							try {
-								JSON.parse(ds);
-							} catch (err) {
-								console.error("error: '" + err + "' parsing:'" + ds + "'");
-								done(true);
-								return;
-							}
+			jchaos.getCUStatus("Start", function (ll) {
+				cu_in_start = ll;
+				console.log("CU status START:"+ll);
 
-							var sys = JSON.stringify(data[0].system);
-							var healt = JSON.stringify(data[0].health);
-							var out = JSON.stringify(data[0].output);
-							assert.ok(!((ds.length < 2) || (sys.length < 2) || (healt.length < 2) || (out.length < 2)));
-					
-
-					});
-				});
+				if(ll.length>0){
+					done(0);
+				} else {
+					done(1);
+				}
 			});
-
+			},5000);
 		});
+		it('Test all datasets',function(done){
+			jchaos.checkLive('Live check',cu_in_start, 10, 2000, function (ds) {
+				console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
+				return ((JSON.stringify(ds.system).length >= 2) && (JSON.stringify(ds.health).length >= 2) && (JSON.stringify(ds.output).length >= 2)); }, function () { done(0); }, function () { done(1); });
+		
+		});
+			
 		it('GET FULL LIVE STATUS', function () {
 			cualive_ds=jchaos.getChannel(cualive, -1, null);
 			var check = JSON.stringify(cualive_ds);
