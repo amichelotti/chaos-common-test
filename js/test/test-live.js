@@ -41,9 +41,9 @@ describe("CHAOS LIVE TESTS", function () {
 			jchaos.search("", "cu", true, function (data) {
 				cualive = data;
 				jchaos.getCUStatus("Start", function (ll) {
-	
+					done(data.length <= 0);
+
 				});
-				done(data.length <= 0);
 
 
 			});
