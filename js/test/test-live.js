@@ -36,25 +36,23 @@ describe("CHAOS LIVE TESTS", function () {
 	this.timeout(60000);
 
 	describe('SEARCH', function () {
-
-		it('SEARCH ALIVE CU array not null array of names', function (done) {
-			jchaos.search("", "cu", true, function (data) {
-				cualive = data;
-				jchaos.getCUStatus("Start", function (ll) {
+		it('SEARCH ALL CU (must be not empty)', function (done) {
+			jchaos.search("", "cu", false, function (data) {
+				cu_all = data;
+				// get channel to initialize live caches
+				jchaos.getChannel(cu_all, -1,function (ll) {
 					done(data.length <= 0);
 
 				});
-
-
 			});
 		})
-		it('SEARCH ALL CU greater ALIVE cu', function (done) {
-			jchaos.search("", "cu", false, function (data) {
-				cu_all = data;
+		it('SEARCH ALIVE CU (must be less ALL CU)', function (done) {
+			jchaos.search("", "cu", true, function (data) {
+				cualive = data;
 				done(cu_all.length > cualive.lenght);
-
 			});
 		})
+		
 		it('SEARCH CLASS ALIVE array not null array of names', function (done) {
 			jchaos.search("", "class", true, function (data) {
 				class_alive = data;
