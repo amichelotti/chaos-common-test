@@ -64,6 +64,5 @@ else
 fi
 
 done
-stop_services
 stop_proc $USNAME
 end_test $errors
