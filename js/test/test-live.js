@@ -125,7 +125,7 @@ describe("CHAOS LIVE TESTS", function () {
 		});
 		it('Test all datasets',function(done){
 			jchaos.checkLive('Live check',cu_in_start, 10, 2000, function (ds) {
-				console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
+			//	console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
 				return ((JSON.stringify(ds.system).length >= 2) && (JSON.stringify(ds.health).length >= 2) && (JSON.stringify(ds.output).length >= 2)); }, function () { done(0); }, function () { done(1); });
 		
 		});

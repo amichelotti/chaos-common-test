@@ -50,8 +50,20 @@ var ncu=0;
 var byte_received=0;
 var start_test=Date.now();
 var end_test=0;
-
+var started_cu=[];
 describe("CHAOS CU JSON TEST",function(){
+	it('Stopping all started CU',function(done){
+		jchaos.getCUStatus("Start", function (ll) {
+			console.log("N. CU in Start:" + ll.length);
+			started_cu = ll;
+			
+			//jchaos.sendCUCmd(cu_status, "stop", "", null);
+			jchaos.node(started_cu, "stop", "cu", null, null);
+
+			jchaos.checkLive('Stopping all started CU',started_cu, 10, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
+		});
+	});
+
 	it('Registering object',function(done){
 		jchaos.registerCU("IMA/ACCELEROMETER/DAQ",myobjDefinition,function(data){
 			console.log("- registration ok");
@@ -78,6 +90,17 @@ describe("CHAOS CU JSON TEST",function(){
 		console.log("- Push Test "+ npush + " elems - End");
 		console.log("- Total time: "+(end_test - start_test )+ " ms, push/s: "+(npush*1000/(end_test - start_test )));
 		done();
+	});
+	it('Restarting all stopped CU',function(done){
+		jchaos.getCUStatus("Stop", function (ll) {
+			console.log("N. CU in Stop:" + ll.length);
+			started_cu = ll;
+			
+			//jchaos.sendCUCmd(cu_status, "stop", "", null);
+			jchaos.node(started_cu, "start", "cu", null, null);
+
+			jchaos.checkLive('Restarting all stopped CU',started_cu, 10, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
+		});
 	});
 });
 	
