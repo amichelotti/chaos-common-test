@@ -57,8 +57,7 @@ describe("CHAOS CU JSON TEST",function(){
 			console.log("N. CU in Start:" + ll.length);
 			started_cu = ll;
 			
-			//jchaos.sendCUCmd(cu_status, "stop", "", null);
-			jchaos.node(started_cu, "stop", "cu", null, null);
+		    jchaos.node(started_cu, "stop", "cu", null, null);
 
 			jchaos.checkLive('Stopping all started CU',started_cu, 10, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
 		});
