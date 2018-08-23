@@ -51,7 +51,7 @@ sleep 10
 errors=0
 #tests="test-live.js test-burst-camera.js"
 #tests="test-live.js test-transitions.js"
-tests="test-live.js test-jsoncu.js test-powersupply.js test-transitions.js"
+tests="test-live.js test-transitions.js test-powersupply.js test-jsoncu.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t;then
