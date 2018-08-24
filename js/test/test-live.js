@@ -41,9 +41,10 @@ describe("CHAOS LIVE TESTS", function () {
 				cu_all = data;
 				// get channel to initialize live caches
 				jchaos.getChannel(cu_all, -1,function (ll) {
-					done(data.length <= 0);
 
 				});
+				done(data.length <= 0);
+
 			});
 		})
 		it('SEARCH ALIVE CU (must be less ALL CU)', function (done) {

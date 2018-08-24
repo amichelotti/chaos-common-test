@@ -75,15 +75,19 @@ describe("CHAOS CU JSON TEST",function(){
 		start_test=Date.now();
 		jchaos.normalizeDataset(myobj);
 		this.timeout(600000);
+		console.log("- Start Rest push test");
 
-		while(cnt++<npush){
-			myobj.v+=1.0;
-			myobj.arrd[0]=2.0*cnt +1;
-			myobj.arrd[1]=2.0*cnt;
-			myobj.timestamp=clock.getTime();
-			myobj.boolv=!myobj.boolv;
-			myobj.int32=myobj.int32+1;
-			jchaos.pushCU("IMA/ACCELEROMETER/DAQ",myobj,null);
+		while(cnt<npush){
+			
+			jchaos.pushCU("IMA/ACCELEROMETER/DAQ",myobj,function(){
+				myobj.v+=1.0;
+				myobj.arrd[0]=2.0*cnt +1;
+				myobj.arrd[1]=2.0*cnt;
+				myobj.timestamp=clock.getTime();
+				myobj.boolv=!myobj.boolv;
+				myobj.int32=myobj.int32+1;
+				cnt++;
+			});
 		}
 		end_test=Date.now();
 		console.log("- Push Test "+ npush + " elems - End");

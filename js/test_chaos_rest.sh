@@ -49,10 +49,12 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 info_mesg "waiting 10s ..."
 sleep 10
 errors=0
+#tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
 #tests="test-live.js test-transitions.js"
-tests="test-live.js test-transitions.js test-powersupply.js test-jsoncu.js"
+
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
+tests="test-live.js test-transitions.js test-powersupply.js test-burst-camera.js test-jsoncu.js"
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t;then
     ok_mesg "mocha unit server test $t"
