@@ -31,6 +31,7 @@ var class_all = [];
 var zone_alive = [];
 var camera_list = [];
 var tot_ok = 0;
+var start_tag_time;
 
 jchaos.setOptions(options);
 
@@ -61,6 +62,7 @@ describe('TEST BURST FEATURE', function () {
 	});
 	it('Start tagging cameras for 10s tagname="burstbyseconds"', function (done) {
 		jchaos.tag("burstbyseconds",camera_list,2,10000,function(){
+			start_tag_time=Date.now();
 			jchaos.checkLive('Tagging check',camera_list, 10, 5000, function (ds) { console.log("id:"+ds.system.ndk_uid+" burst state:"+ds.system.cudk_burst_state+" tag:'"+ds.system.cudk_burst_tag+"'");return (ds!=null)&&ds.hasOwnProperty("system")&&ds.system.hasOwnProperty("cudk_burst_state")&&(ds.system.cudk_burst_state==true)&&ds.system.hasOwnProperty("cudk_burst_tag")&&(ds.system.cudk_burst_tag=="burstbyseconds"); }, function () { done(0); }, function () { done(1) });
 
 		});
