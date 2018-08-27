@@ -87,12 +87,16 @@ describe("CHAOS CU JSON TEST",function(){
 				myobj.boolv=!myobj.boolv;
 				myobj.int32=myobj.int32+1;
 				cnt++;
+				if(cnt==npush){
+					end_test=Date.now();
+					console.log("- Push Test "+ npush + " elems - End");
+					console.log("- Total time: "+(end_test - start_test )+ " ms, push/s: "+(npush*1000/(end_test - start_test )));
+					done();
+					return;
+				}
 			});
 		}
-		end_test=Date.now();
-		console.log("- Push Test "+ npush + " elems - End");
-		console.log("- Total time: "+(end_test - start_test )+ " ms, push/s: "+(npush*1000/(end_test - start_test )));
-		done();
+		
 	});
 	it('Restarting all stopped CU',function(done){
 		jchaos.getCUStatus("Stop", function (ll) {
