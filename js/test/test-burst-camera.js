@@ -67,7 +67,30 @@ describe('TEST BURST FEATURE', function () {
 
 		});
 	});
-
+	/*it('Retriving tags"', function (done) {
+		var stop_tag_time=Date.now();
+		var total={};
+		camera_list.forEach(function(cam){
+			total[cam]=0;
+			console.log("\t retriving history of '"+cam+"' from:"+start_tag_time+" to:"+(stop_tag_time+1000)+" tag:burstbyseconds");
+			jchaos.getHistory(cam,0,start_tag_time,stop_tag_time+1000,null,function(data){
+				total[cam]+=data.Y.length
+				console.log(cam+": retrived :"+data.Y.length+ "total:"+total[cam] );
+				var cnt=0;
+				total.forEach(function(t){
+					if(t==10){
+						cnt++;
+					}
+				});
+				if(cnt==total.length){
+					done();
+				}
+			},"burstbyseconds");
+		});
+		
+		
+		
+	});*/
 	
 });
 
