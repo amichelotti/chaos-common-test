@@ -6,7 +6,7 @@ options={};
 var clock = new Date();
 
 options={};
-var npush=1000
+var npush=500
 
 process.argv.forEach(function (val, index, array) {
 	  
