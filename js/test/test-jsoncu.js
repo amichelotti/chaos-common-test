@@ -79,5 +79,14 @@ describe("CHAOS CU JSON TEST",function(){
 		console.log("- Total time: "+(end_test - start_test )+ " ms, push/s: "+(npush*1000/(end_test - start_test )));
 		done();
 	});
+
+	it('Remove object',function(done){
+		jchaos.pushCU("IMA/ACCELEROMETER/DAQ",myobj,null);
+		jchaos.node("IMA/ACCELEROMETER/DAQ", "del", "cu", "IMA", null, function(){
+			done();
+
+		});
+	});
+
 });
 	

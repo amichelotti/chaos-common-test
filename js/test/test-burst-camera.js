@@ -67,30 +67,37 @@ describe('TEST BURST FEATURE', function () {
 
 		});
 	});
-	/*it('Retriving tags"', function (done) {
+	it('Retriving tags (TODO:must wait 5s otherwise no result where found in other cameras)', function (done) {
 		var stop_tag_time=Date.now();
 		var total={};
+		var cams=0;
+		console.log("wating 5 s");
+
+		setTimeout(function(){
 		camera_list.forEach(function(cam){
 			total[cam]=0;
-			console.log("\t retriving history of '"+cam+"' from:"+start_tag_time+" to:"+(stop_tag_time+1000)+" tag:burstbyseconds");
-			jchaos.getHistory(cam,0,start_tag_time,stop_tag_time+1000,null,function(data){
+			cams++;
+			console.log("\t retriving history of '"+cam+"' from:"+(start_tag_time)+" to:"+(stop_tag_time+100)+" tag:burstbyseconds");
+			jchaos.getHistory(cam,0,start_tag_time,stop_tag_time+100,null,function(data){
 				total[cam]+=data.Y.length
-				console.log(cam+": retrived :"+data.Y.length+ "total:"+total[cam] );
+				console.log(cam+": retrived :"+data.Y.length+ "total:"+JSON.stringify(total ));
 				var cnt=0;
-				total.forEach(function(t){
-					if(t==10){
+				for (var k in total){
+					if(total[k]>=9) {
 						cnt++;
 					}
-				});
-				if(cnt==total.length){
+
+				}
+				
+				if((cnt>0) && (cnt==cams)){
 					done();
 				}
 			},"burstbyseconds");
 		});
-		
-		
-		
-	});*/
+	},5000);	
+	});
+
+
 	
 });
 
