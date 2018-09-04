@@ -15,15 +15,15 @@ fi
 start_services || end_test 1 "cannot start services"
 
 
-if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.txt" ];then
-    MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.txt
+if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
+    MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.json
     ok_mesg "found $MDS_TEST_CONF"
 else
-    nok_mesg "cannot find $CHAOS_TOOLS/etc/localhost/MDSConfig.txt"
+    nok_mesg "cannot find $CHAOS_TOOLS/etc/localhost/MDSConfig.json"
     end_test 1 "Cannot find MDS_TEST_CONF"
 fi
    
-info_mesg "using configuration " "$CHAOS_TOOLS/etc/localhost/MDSConfig.txt"
+info_mesg "using configuration " "$CHAOS_TOOLS/etc/localhost/MDSConfig.json"
 if run_proc "$CHAOS_PREFIX/bin/ChaosMDSCmd --mds-conf $MDS_TEST_CONF $CHAOS_OVERALL_OPT >& $CHAOS_PREFIX/log/ChaosMDSCmd.log;" "ChaosMDSCmd"; then
     ok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
 else
