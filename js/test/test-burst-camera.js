@@ -50,13 +50,10 @@ describe('TEST BURST FEATURE', function () {
 		});
 	});
 
-	it('find all cameras implementation > 0, start them', function (done) {
-		jchaos.findCUByImplementation("Camera",false,function(ll){
+	it('find all cameras implementation > 0, alive', function (done) {
+		jchaos.findCUByImplementation("Camera",true,function(cam){
 			console.log("N. camera found:" + ll.length+ " :"+JSON.stringify(ll));
 			camera_list=ll;
-			jchaos.node(camera_list, "init", "cu", null, null);
-			jchaos.node(camera_list, "start", "cu", null, null);
-
 			done(ll.length<=0);
 		});
 	});
