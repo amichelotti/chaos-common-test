@@ -141,23 +141,7 @@ describe("CHAOS LIVE TESTS", function () {
 			});
 			
 		});
-		it('RETRIVE CU status', function (done) {
-
-			status_to_check.forEach(function (elem) {
-				describe('Retriving all CU in \"' + elem + '\" status', function (done) {
-					this.timeout(60000);
-
-					it('checking CU in "' + elem + '" status', function (done) {
-						var cus = jchaos.getCUStatus(elem, function (ll) {
-							cualive_by_status[elem] = ll;
-							console.log("\tCU in '" + elem + "':" + cualive_by_status[elem]);
-							done(!(ll instanceof Array));
-						});
-					});
-				});
-			});
-
-		});
+		
 		
 		describe('Bypass Test', function(){
 			it('check for bypass key', function () {
