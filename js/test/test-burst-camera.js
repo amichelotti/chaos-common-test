@@ -52,9 +52,9 @@ describe('TEST BURST FEATURE', function () {
 
 	it('find all cameras implementation > 0, alive', function (done) {
 		jchaos.findCUByImplementation("Camera",true,function(cam){
-			console.log("N. camera found:" + ll.length+ " :"+JSON.stringify(ll));
-			camera_list=ll;
-			done(ll.length<=0);
+			console.log("N. camera found:" + cam.length+ " :"+JSON.stringify(cam));
+			camera_list=cam;
+			done(cam.length<=0);
 		});
 	});
 	it('Start tagging cameras for 10s tagname="burstbyseconds"', function (done) {
