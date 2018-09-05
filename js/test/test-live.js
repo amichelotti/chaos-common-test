@@ -131,12 +131,15 @@ describe("CHAOS LIVE TESTS", function () {
 		
 		});
 			
-		it('GET FULL LIVE STATUS', function () {
-			cualive_ds=jchaos.getChannel(cualive, -1, null);
-			var check = JSON.stringify(cualive_ds);
-			assert.ok(!((check.length < 2) || (cualive_ds.length != cualive.length)));
+		it('GET FULL LIVE STATUS', function (done) {
+			jchaos.getChannel(cualive, -1, function(ll){
+				cualive_ds=ll;
+				var check = JSON.stringify(cualive_ds);
+				done(!((check.length >= 2) && (cualive_ds.length == cualive.length)));
+			});
+			
 		});
-		it('RETRIVE CU status', function () {
+		it('RETRIVE CU status', function (done) {
 
 			status_to_check.forEach(function (elem) {
 				describe('Retriving all CU in \"' + elem + '\" status', function (done) {
