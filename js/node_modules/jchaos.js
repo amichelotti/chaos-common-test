@@ -164,9 +164,9 @@
 		    jchaos.basicPost(str_url_cu, JSON.stringify(obj), function (datav) { handleFunc(datav); });
 		    
 		}
-		jchaos.mdsBase = function (cmd, opt, handleFunc) {
+		jchaos.mdsBase = function (cmd, opt, handleFunc,errFunc) {
 			var param = "cmd=" + cmd + "&parm=" + JSON.stringify(opt);
-			var ret = jchaos.basicPost("MDS", param, handleFunc/*function(datav){handleFunc(datav);}*/);
+			var ret = jchaos.basicPost("MDS", param, handleFunc,errFunc);
 			return ret;
 		}
 		/**
@@ -176,7 +176,7 @@
 		 * @param {*} _tag_type 1 means cycles 2 means ms time
 		 * @param {*} _tag_value tag value
 		 */
-		jchaos.tag= function(_tagname,_node_list,_tag_type,_tag_value,handleFunc){
+		jchaos.tag= function(_tagname,_node_list,_tag_type,_tag_value,handleFunc,nok){
 			var value={};
 			value['dsndk_history_burst_tag']=_tagname;
 			value['dsndk_history_burst_type']=_tag_type;
@@ -187,9 +187,9 @@
 			} else {
 				value['ndk_uid']=[_node_list];
 			}
-			return jchaos.snapshot("","burst","",JSON.stringify(value),handleFunc);
+			return jchaos.snapshot("","burst","",JSON.stringify(value),handleFunc,nok);
 		}
-		jchaos.snapshot = function (_name, _what, _node_list, value_, handleFunc) {
+		jchaos.snapshot = function (_name, _what, _node_list, value_, handleFunc,nok) {
 			var opt = {};
 			if (_name instanceof Array) {
 				opt['names'] = _name;
@@ -214,7 +214,7 @@
 
 			}
 
-			return jchaos.mdsBase("snapshot", opt, handleFunc);
+			return jchaos.mdsBase("snapshot", opt, handleFunc,nok);
 		}
 
 		/*get a US description
@@ -229,7 +229,7 @@
 			var ret = jchaos.node(_name, "set", "us", "", _json, null);
 			return ret;
 		}
-		jchaos.node = function (_name, _what, _type, _parent, value_, handleFunc) {
+		jchaos.node = function (_name, _what, _type, _parent, value_, handleFunc,nok) {
 			var opt = {};
 			if (_name instanceof Array) {
 				if(_name.length==0){
@@ -254,7 +254,7 @@
 					return;
 				}
 			}
-			return jchaos.mdsBase("node", opt, handleFunc);
+			return jchaos.mdsBase("node", opt, handleFunc,nok);
 		}
 
 		jchaos.loadScript=function(_name,seqid,handleFunc){
@@ -499,8 +499,16 @@
 			};
 			return jchaos.mdsBase("node", opt, handleFunc);
 		}
-
-		jchaos.loadUnload = function (dev, value, handleFunc) {
+		jchaos.setProperty = function (dev, prop, handleFunc,errFunc) {
+			var opt = {
+				"name": dev,
+				"type": "cu",
+				"what": "set",
+				"value": { "properties": prop }
+			};
+			return jchaos.mdsBase("node", opt, handleFunc,errFunc);
+		}
+		jchaos.loadUnload = function (dev, value, handleFunc,nok) {
 
 			var opt = {
 				
@@ -512,7 +520,7 @@
 			} else {
 				opt['name']=dev;
 			}
-			jchaos.mdsBase("node", opt, handleFunc);
+			jchaos.mdsBase("node", opt, handleFunc,nok);
 		}
 		jchaos.forceState = function (devs, state, handleFunc) {
 			jchaos.getChannel(devs, 4, function (data) {
@@ -604,11 +612,11 @@
 				});
 			});
 		}
-		jchaos.setAttribute = function (devs, attr, value) {
+		jchaos.setAttribute = function (devs, attr, value,ok,nok) {
 			//var parm="{\""+attr+"\":\""+value+"\"}";
 			var parm = {};
 			parm[attr] = value;
-			return jchaos.sendCUCmd(devs, "attr", parm, null);
+			jchaos.sendCUCmd(devs, "attr", parm, ok,nok);
 		}
 
 		/*
