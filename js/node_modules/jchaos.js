@@ -705,7 +705,7 @@
 
 		}
 
-		jchaos.fetchHistoryCameraToZip=function(zipname,cams,start,stop,tagsv){
+		jchaos.fetchHistoryToZip=function(zipname,cams,start,stop,tagsv){
 			var vcams;
 			if(cams instanceof Array){
 				vcams=cams;
@@ -717,11 +717,21 @@
 			var cnt=vcams.length;
 			vcams.forEach(function(ci){
 				jchaos.getHistory(ci,0,start,stop,"",function(ds){
-					ds.Y.forEach(function(img){
-						var name=ci+"_"+img.dpck_seq_id+"_"+img.dpck_ats+"_"+img.FMT;
-						zipf.file(name,img.FRAMEBUFFER.$binary.base64,{base64:true});
-						console.log("zipping: "+name + " into:"+zipname);
+					if(ds.Y[0].hasOwnProperty("FRAMEBUFFER")&& ds.Y[0].FRAMEBUFFER.hasOwnProperty("$binary")&&ds.Y[0].hasOwnProperty("FMT")){
+						ds.Y.forEach(function(img){
+						
+							var name=ci+"_"+img.dpck_seq_id+"_"+img.dpck_ats+"_"+img.FMT;
+							zipf.file(name,img.FRAMEBUFFER.$binary.base64,{base64:true});
+							console.log("zipping image: "+name + " into:"+zipname);
+						
 					});
+					} else {
+						var name=ci;
+						zipf.file(name,JSON.stringify(ds.Y));
+						console.log("zipping dataset: "+name + " into:"+zipname);
+					}
+
+					
 					if(--cnt == 0){
 						zipf.generateAsync({type:"blob"}).then(function (content) {
     			
@@ -745,7 +755,7 @@
 			console.log("getHistory (seqid:"+seq+ " runid:"+runid+") start:"+opt.start+" end:"+opt.end+ " page:"+opt.page);
 			jchaos.basicPost("CU", str_url_cu, function (datav) {
 				var ret=true;
-				if (opt.var != "") {
+				if ((opt.var !=null) && (opt.var != "")) {
 					datav.data.forEach(function (ele) {
 						result.X.push(Number(ele.ts));
 						result.Y.push(ele.val);
