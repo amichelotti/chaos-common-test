@@ -705,6 +705,34 @@
 
 		}
 
+		jchaos.fetchHistoryCameraToZip=function(zipname,cams,start,stop,tagsv){
+			var vcams;
+			if(cams instanceof Array){
+				vcams=cams;
+			} else {
+				vams=[cams];
+			}
+			// need JSzip
+			var zipf= new JSZip();
+			var cnt=vcams.length;
+			vcams.forEach(function(ci){
+				jchaos.getHistory(ci,0,start,stop,"",function(ds){
+					ds.Y.forEach(function(img){
+						var name=ci+"_"+img.dpck_seq_id+"_"+img.dpck_ats+"_"+img.FMT;
+						zipf.file(name,img.FRAMEBUFFER.$binary.base64,{base64:true});
+						console.log("zipping: "+name + " into:"+zipname);
+					});
+					if(--cnt == 0){
+						zipf.generateAsync({type:"blob"}).then(function (content) {
+    			
+							saveAs(content, zipname);
+							});
+					}
+				},tagsv);
+			});
+			
+
+		}
 		
 		jchaos.getHistoryBase = function (devs, opt, seq,runid, result, handleFunc) {
 			var cmd = "queryhst";
