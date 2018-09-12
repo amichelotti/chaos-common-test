@@ -705,7 +705,7 @@
 
 		}
 
-		jchaos.fetchHistoryToZip=function(zipname,cams,start,stop,tagsv){
+		jchaos.fetchHistoryToZip=function(zipname,cams,start,stop,tagsv,updateCall){
 			var vcams;
 			if(cams instanceof Array){
 				vcams=cams;
@@ -715,28 +715,32 @@
 			// need JSzip
 			var zipf= new JSZip();
 			var cnt=vcams.length;
+			var per=0.1;
+			updateCall(
+				{
+					percent:per
+				});
 			vcams.forEach(function(ci){
 				jchaos.getHistory(ci,0,start,stop,"",function(ds){
 					if(ds.Y[0].hasOwnProperty("FRAMEBUFFER")&& ds.Y[0].FRAMEBUFFER.hasOwnProperty("$binary")&&ds.Y[0].hasOwnProperty("FMT")){
 						ds.Y.forEach(function(img){
 						
-							var name=ci+"_"+img.dpck_seq_id+"_"+img.dpck_ats+"_"+img.FMT;
+							var name=ci+"/"+img.dpck_seq_id+"_"+img.dpck_ats+"_"+img.FMT;
 							zipf.file(name,img.FRAMEBUFFER.$binary.base64,{base64:true});
 							console.log("zipping image: "+name + " into:"+zipname);
 						
 					});
 					} else {
-						var name=ci;
+						var name=ci+".json";
 						zipf.file(name,JSON.stringify(ds.Y));
 						console.log("zipping dataset: "+name + " into:"+zipname);
 					}
 
 					
 					if(--cnt == 0){
-						zipf.generateAsync({type:"blob"}).then(function (content) {
-    			
+						zipf.generateAsync({type:"blob"},updateCall).then(function (content) {
 							saveAs(content, zipname);
-							});
+						});
 					}
 				},tagsv);
 			});
