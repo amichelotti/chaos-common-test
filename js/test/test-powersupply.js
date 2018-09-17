@@ -179,7 +179,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 		//	console.log(" check busy of" +devlist);
 
 			devlist.forEach(function(elem){
-				jchaos.getChannel(elem,0,function(data){
+				jchaos.getChannel(elem,3,function(data){
 					//console.log(" - "+elem+ " ->"+JSON.stringify(data));
 					if(data[0].busy==false){
 						tot_ok++;

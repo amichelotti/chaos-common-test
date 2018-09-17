@@ -62,6 +62,9 @@ if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t;then
 else
     nok_mesg "mocha unit server test $t"
     ((errors++))
+    stop_proc $USNAME
+    end_test $errors
+    
 fi
 
 done
