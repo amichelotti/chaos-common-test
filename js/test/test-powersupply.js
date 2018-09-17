@@ -180,8 +180,8 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 
 			devlist.forEach(function(elem){
 				jchaos.getChannel(elem,3,function(data){
-					//console.log(" - "+elem+ " ->"+JSON.stringify(data));
-					if(data[0].busy==false){
+					console.log(" - "+elem+ " ->"+JSON.stringify(data));
+					if(data[0].busy=="false"){
 						tot_ok++;
 						console.log("\t- "+data[0].ndk_uid+ " ok "+tot_ok+"/"+devlist.length);
 
@@ -218,7 +218,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST',function(){
 							var error=0;
 							var retry=5;
 							jchaos.snapshot(snap,"restore","","",function(d){
-								jchaos.checkLive('check restore '+snap, btf,10,5000,function(ds){return (ds.output.busy == false);},function(){
+								jchaos.checkLive('check restore '+snap, btf,10,5000,function(ds){return (ds.system.busy == false);},function(){
 									jchaos.getChannel(btf,-1,function(data){
 										data.forEach(function(elem){
 											var expected=snapinfo[snap];
