@@ -54,19 +54,30 @@ errors=0
 #tests="test-live.js test-transitions.js"
 
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="test-live.js test-transitions.js test-powersupply.js test-burst-camera.js test-jsoncu.js"
-for t in $tests;do
-if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t;then
-    ok_mesg "mocha unit server test $t"
+tests="test/test-live.js test/test-transitions.js test/test-powersupply.js test/test-burst-camera.js test/test-jsoncu.js"
+# for t in $tests;do
+# if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t  --reporter mochawesome  --reporter-options reportDir=html,reportFilename=$t ;then
+#     ok_mesg "mocha unit server test $t"
 
-else
-    nok_mesg "mocha unit server test $t"
-    ((errors++))
-    stop_proc $USNAME
-    end_test $errors
+# else
+#     nok_mesg "mocha unit server test $t"
+#     ((errors++))
+#     stop_proc $USNAME
+#     end_test $errors
     
-fi
+# fi
 
-done
+#done
+
+if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome  --reporter-options reportDir=html,reportFilename=test_rest;then
+     ok_mesg "mocha unit server test "
+
+ else
+     nok_mesg "mocha unit server test"
+     stop_proc $USNAME
+     end_test $errors
+    
+ fi
+mv html $CHAOS_PREFIX/log
 stop_proc $USNAME
 end_test $errors
