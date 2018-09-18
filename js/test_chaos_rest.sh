@@ -69,7 +69,7 @@ tests="test/test-live.js test/test-transitions.js test/test-powersupply.js test/
 
 #done
 
-if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome  --reporter-options reportDir=html,reportFilename=test_rest;then
+if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=test_rest;then
      ok_mesg "mocha unit server test "
 
  else
@@ -78,6 +78,5 @@ if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome
      end_test $errors
     
  fi
-mv html $CHAOS_PREFIX/log
 stop_proc $USNAME
 end_test $errors
