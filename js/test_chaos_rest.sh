@@ -75,8 +75,9 @@ if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome
  else
      nok_mesg "mocha unit server test"
      stop_proc $USNAME
+     ((errors++))
      end_test $errors
-    
+     
  fi
 stop_proc $USNAME
 end_test $errors
