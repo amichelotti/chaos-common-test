@@ -34,6 +34,7 @@ var zone_alive = [];
 var zone_all = [];
 var tot_ok = 0;
 var btf = [];
+var all_ok=0;
 
 jchaos.setOptions(options);
 
@@ -175,7 +176,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 			});
 		});
 	});
-	describe("checking snapshot restores of:"+btf, function () {
+	describe("checking snapshot restores", function () {
 			it('restore all snapshots', function () {
 				this.timeout(60000);
 				prepared_snapshot.forEach(function (snap) {
@@ -197,21 +198,42 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 
 										});
 										done(error);
+										if(error==0){
+											if(++all_ok ==prepared_snapshot.length){
+												console.log("ALL SNAP OK");
+											}
+										} else {
+											console.log("SOME ERROR SNAP ");
+										}
+
 									});
 								}, function () {
 									done(1);
+									console.log("TIMEOUT")
 								});
 
 							}, function () {
 								console.log("snapshot restore command on '" + snap + " FAILED");
 								done(1);
+								done_mst(1);
+
 							});
 
 						});
 					});
 				});
+						
 			});
+			
+
 	});
+/*	describe("finale check", function () {
+		it('restore all snapshots check ok', function (done)  {
+			jchaos.checkPeriodiocally("check all restored",10,5000,
+			function(){return (all_ok==prepared_snapshot.length)},function(){done(0);},function(){done(1);});
+
+		});
+	});*/
 
 });
 

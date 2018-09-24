@@ -54,7 +54,7 @@ errors=0
 #tests="test-live.js test-transitions.js"
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="test/test-live.js test/test-transitions.js test/test-powersupply.js test/test-burst-camera.js test/test-jsoncu.js"
+tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 # for t in $tests;do
 # if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t  --reporter mochawesome  --reporter-options reportDir=html,reportFilename=$t ;then
 #     ok_mesg "mocha unit server test $t"
