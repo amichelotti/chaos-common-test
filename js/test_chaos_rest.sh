@@ -52,7 +52,7 @@ errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
 #tests="test-live.js test-transitions.js"
-
+#tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
 tests="test/test-live.js test/test-transitions.js test/test-powersupply.js test/test-burst-camera.js test/test-jsoncu.js"
 # for t in $tests;do
