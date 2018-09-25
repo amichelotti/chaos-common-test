@@ -176,55 +176,56 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 			});
 		});
 	});
-	describe("checking snapshot restores", function () {
-			it('restore all snapshots', function () {
-				this.timeout(60000);
-				prepared_snapshot.forEach(function (snap) {
-					describe(' restore ' + snap, function () {
-						this.timeout(60000);
-
-						it("check restore '" + snap + "'", function (done) {
-							jchaos.snapshot(snap, "restore", "", "", function (d) {
-								jchaos.checkLive("check restore '" + snap + "'", btf,20, 5000, function (ds) { return (ds.system.busy == false); }, function () {
-									jchaos.getChannel(btf, -1, function (data) {
-										var error = 0;
-										data.forEach(function (elem) {
-											var expected = snapinfo[snap];
-											expected.forEach(function (id) {
-												if (id.input.ndk_uid == elem) {
-													error += jpowersupply.compareDatasets(data[0], id);
-												}
-											});
-
-										});
-										done(error);
-										if(error==0){
-											if(++all_ok ==prepared_snapshot.length){
-												console.log("ALL SNAP OK");
-											}
-										} else {
-											console.log("SOME ERROR SNAP ");
-										}
-
-									});
-								}, function () {
-									done(1);
-									console.log("TIMEOUT")
-								});
-
-							}, function () {
-								console.log("snapshot restore command on '" + snap + " FAILED");
-								done(1);
-								done_mst(1);
-
-							});
-
+	function promiseCheckSnap(snap,culist){
+		var ret=new Promise(function(resolve,reject){
+		jchaos.snapshot(snap, "restore", "", "", function (d) {
+			jchaos.checkLive("check restore '" + snap + "'", culist,20, 5000, function (ds) { return (ds.system.busy == false); }, function () {
+				jchaos.getChannel(culist, -1, function (data) {
+					var error = 0;
+					data.forEach(function (elem) {
+						var expected = snapinfo[snap];
+						expected.forEach(function (id) {
+							if (id.input.ndk_uid == elem) {
+								error += jpowersupply.compareDatasets(data[0], id);
+							}
 						});
+
 					});
+	
+					if(error==0){
+						if(++all_ok ==prepared_snapshot.length){
+							console.log("ALL SNAP OK");
+							resolve(all_ok);
+						}
+					} else {
+						console.log("SOME ERROR SNAP ");
+						reject(all_ok);
+					}
+
 				});
-						
+			}, function () {
+				console.log("TIMEOUT");
+				reject(all_ok);
+
 			});
-			
+
+		}, function () {
+			console.log("snapshot restore command on '" + snap + " FAILED");
+			reject(-1);
+
+
+		});
+	});
+	return ret;
+	}
+	describe("checking snapshot restores", function () {
+				this.timeout(60000);
+				it('zero-stby', function () {
+					return promiseCheckSnap('zero-stby',btf);
+				});
+				it('2-increments-oper', function () {
+					return promiseCheckSnap('2-increments-oper',btf);
+				});			
 
 	});
 /*	describe("finale check", function () {
