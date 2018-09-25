@@ -193,19 +193,19 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 					});
 	
 					if(error==0){
-						if(++all_ok ==prepared_snapshot.length){
-							console.log("ALL SNAP OK");
-							resolve(all_ok);
-						}
+					
+						console.log(" SNAP OK");
+						resolve(error);
+						
 					} else {
 						console.log("SOME ERROR SNAP ");
-						reject(all_ok);
+						reject(error);
 					}
 
 				});
 			}, function () {
 				console.log("TIMEOUT");
-				reject(all_ok);
+				reject(-2);
 
 			});
 
