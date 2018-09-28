@@ -196,16 +196,18 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 					
 						console.log(" SNAP OK");
 						resolve(error);
-						
+						return;
 					} else {
 						console.log("SOME ERROR SNAP ");
 						reject(error);
+						return;
 					}
 
 				});
 			}, function () {
 				console.log("TIMEOUT");
 				reject(-2);
+				return;
 
 			});
 
