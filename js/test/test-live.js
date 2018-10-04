@@ -110,21 +110,20 @@ describe("CHAOS LIVE TESTS", function () {
 		
 			// make it on started CU
 		it('RETRIVE CU IN START', function (done) {
-			console.log("Waiting 8s");
+			console.log("Waiting 5s");
 
 			setTimeout(function(){
 
 			jchaos.getCUStatus("Start", function (ll) {
-				cu_in_start = ll;
-				console.log("CU status START:"+ll.length);
-
-				if(ll.length>0){
-					done(0);
-				} else {
-					done(1);
-				}
+			    cu_in_start = ll;
+			    console.log("CU status START:"+ll.length);
+			    done((ll.length<1));
+			    
+			},function(){
+			    console.log("CU status START: ERROR occurred");
+			    done(1);
 			});
-			},8000);
+			},5000);
 		});
 		it('Test all datasets',function(done){
 			jchaos.checkLive('Live check',cu_in_start, 10, 2000, function (ds) {
