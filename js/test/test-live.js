@@ -105,12 +105,12 @@ describe("CHAOS LIVE TESTS", function () {
 	}
 
 	describe('LIVE TEST', function () {
-		this.timeout(60000);
+		this.timeout(1200000);
 		var cu_in_start = [];
 		
 			// make it on started CU
 		it('RETRIVE CU IN START', function (done) {
-			console.log("Waiting 5s");
+			console.log("Waiting 10s");
 
 			setTimeout(function(){
 
@@ -123,7 +123,7 @@ describe("CHAOS LIVE TESTS", function () {
 			    console.log("CU status START: ERROR occurred");
 			    done(1);
 			});
-			},5000);
+			},10000);
 		});
 		it('Test all datasets',function(done){
 			jchaos.checkLive('Live check',cu_in_start, 10, 2000, function (ds) {
