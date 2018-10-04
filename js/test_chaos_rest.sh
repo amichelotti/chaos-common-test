@@ -55,29 +55,27 @@ errors=0
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
 tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
-# for t in $tests;do
-# if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t  --reporter mochawesome  --reporter-options reportDir=html,reportFilename=$t ;then
-#     ok_mesg "mocha unit server test $t"
+for t in $tests;do
+if ./node_modules/mocha/bin/mocha --timeout 60000 test/$t  --reporter mochawesome  --reporter-options reportDir=html,reportFilename=$t ;then
+    ok_mesg "mocha unit server test $t"
 
-# else
-#     nok_mesg "mocha unit server test $t"
-#     ((errors++))
-#     stop_proc $USNAME
-#     end_test $errors
-    
-# fi
+else
+    nok_mesg "mocha unit server test $t"
+    ((errors++))
+    stop_proc $USNAME
+    end_test $errors   
+fi
+done
 
-#done
+# if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=test_rest;then
+#      ok_mesg "mocha unit server test "
 
-if ./node_modules/mocha/bin/mocha --timeout 60000 $tests  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=test_rest;then
-     ok_mesg "mocha unit server test "
-
- else
-     nok_mesg "mocha unit server test"
-     stop_proc $USNAME
-     ((errors++))
-     end_test $errors
+#  else
+#      nok_mesg "mocha unit server test"
+#      stop_proc $USNAME
+#      ((errors++))
+#      end_test $errors
      
- fi
+#  fi
 stop_proc $USNAME
 end_test $errors
