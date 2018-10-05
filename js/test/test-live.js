@@ -127,8 +127,22 @@ describe("CHAOS LIVE TESTS", function () {
 		});
 		it('Test all datasets',function(done){
 			jchaos.checkLive('Live check',cu_in_start, 10, 2000, function (ds) {
+				var ret=false;
 			//	console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
-				return ((JSON.stringify(ds.system).length >= 2) && (JSON.stringify(ds.health).length >= 2) && (JSON.stringify(ds.output).length >= 2)); }, function () { done(0); }, function () { done(1); });
+				if(typeof(JSON.stringify(ds.system))=='undefined'){
+					console.log(ds.health.ndk_uid,": SYSTEM Undefined");
+				}
+				if(typeof(JSON.stringify(ds.health))=='undefined'){
+					console.log(ds.system.ndk_uid,": HEALTH Undefined");
+				}
+				if(typeof(JSON.stringify(ds.output))=='undefined'){
+					console.log(ds.health.ndk_uid,": OUTPUT Undefined");
+				}
+				try{
+					ret=((JSON.stringify(ds.system).length >= 2) && (JSON.stringify(ds.health).length >= 2) && (JSON.stringify(ds.output).length >= 2));
+				} catch(err){
+				}
+				return ret; }, function () { done(0); }, function () { done(1); });
 		
 		});
 			
