@@ -39,9 +39,12 @@ describe("CHAOS LIVE TESTS", function () {
 		it('SEARCH ALL CU (must be not empty)', function (done) {
 			jchaos.search("", "cu", false, function (data) {
 				cu_all = data;
+				jchaos.getChannel(cu_all, 4,null);
 				// get channel to initialize live caches
 				jchaos.search("", "cu", true, function (cual) {
-					jchaos.getChannel(cual, -1,function (ll) {
+					console.log("\t checking channel of #CU:" + cual.length);
+
+					jchaos.getChannel(cual, 4,function (ll) {
 						done(data.length <= 0);
 					});
 				});
