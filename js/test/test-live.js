@@ -41,15 +41,16 @@ describe("CHAOS LIVE TESTS", function () {
 				cu_all = data;
 				jchaos.getChannel(cu_all, 4,null);
 				// get channel to initialize live caches
-				done(data.length <= 0);
-
+X
 				jchaos.search("", "cu", true, function (cual) {
 					console.log("\t checking channel of #CU:" + cual.length);
+					done(data.length <= 0);
 
 					jchaos.getChannel(cual, 4,function (ll) {
-						done(data.length <= 0);
+						console.log("\t ok channel 4:" + ll.length);
+
 					},function(ll){
-						done(data.length <= 0);
+						console.log("\t not ready channel 4:" + ll.length);
 
 					});
 				});
