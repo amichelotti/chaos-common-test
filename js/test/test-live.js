@@ -41,7 +41,6 @@ describe("CHAOS LIVE TESTS", function () {
 				cu_all = data;
 				jchaos.getChannel(cu_all, 4,null);
 				// get channel to initialize live caches
-X
 				jchaos.search("", "cu", true, function (cual) {
 					console.log("\t checking channel of #CU:" + cual.length);
 					done(data.length <= 0);
