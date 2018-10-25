@@ -46,6 +46,9 @@ describe("CHAOS LIVE TESTS", function () {
 
 					jchaos.getChannel(cual, 4,function (ll) {
 						done(data.length <= 0);
+					},function(ll){
+						done(data.length <= 0);
+
 					});
 				});
 			});
