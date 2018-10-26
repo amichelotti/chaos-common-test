@@ -184,7 +184,10 @@ describe("CHAOS LIVE TESTS", function () {
 	
 				// make it on started CU
 				var num=0;
-				cu_in_start.forEach(function (elem) {
+				jchaos.setBypass(cu_in_start, true, function(d){
+					done(false);
+				});
+				/* cu_in_start.forEach(function (elem) {
 					//	console.log("\t ["+elem+"] set bypass false");
 					jchaos.setBypass(elem, true, function(d){
 						num++;
@@ -193,7 +196,7 @@ describe("CHAOS LIVE TESTS", function () {
 						}
 					});
 
-				});		
+				});		 */
 			});
 			it('check for bypass command set TRUE', function (done) {
 				this.timeout(60000);
@@ -205,7 +208,11 @@ describe("CHAOS LIVE TESTS", function () {
 
 			// make it on started CU
 			var num=0;
-			cu_in_start.forEach(function (elem) {
+			jchaos.setBypass(cu_in_start, false, function(d){
+				done(false);
+
+			});
+		/* 	cu_in_start.forEach(function (elem) {
 				//	console.log("\t ["+elem+"] set bypass false");
 				jchaos.setBypass(elem, false, function(d){
 					num++;
@@ -213,7 +220,7 @@ describe("CHAOS LIVE TESTS", function () {
 						done(false);
 					}
 				});
-			});
+			}); */
 				
 		});
 		it('check for bypass command set FALSE', function (done) {
