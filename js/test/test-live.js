@@ -33,7 +33,7 @@ var zone_all = [];
 jchaos.setOptions(options);
 
 describe("CHAOS LIVE TESTS", function () {
-	this.timeout(60000);
+	this.timeout(1200000);
 
 	describe('SEARCH', function () {
 		it('SEARCH ALL CU (must be not empty)', function (done) {
@@ -43,9 +43,14 @@ describe("CHAOS LIVE TESTS", function () {
 				// get channel to initialize live caches
 				jchaos.search("", "cu", true, function (cual) {
 					console.log("\t checking channel of #CU:" + cual.length);
+					done(data.length <= 0);
 
 					jchaos.getChannel(cual, 4,function (ll) {
-						done(data.length <= 0);
+						console.log("\t ok channel 4:" + ll.length);
+
+					},function(ll){
+						console.log("\t not ready channel 4:" + ll.length);
+
 					});
 				});
 			});
