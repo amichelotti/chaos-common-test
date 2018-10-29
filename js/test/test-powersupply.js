@@ -179,7 +179,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 	function promiseCheckSnap(snap,culist){
 		var ret=new Promise(function(resolve,reject){
 		jchaos.snapshot(snap, "restore", "", "", function (d) {
-			jchaos.checkLive("check restore '" + snap + "'", culist,20, 5000, function (ds) { return (ds.system.busy == false); }, function () {
+			jchaos.checkLive("check restore '" + snap + "'", culist,20, 5000, function (ds) { return (ds.system.busy == false)&&(ds.system.cudk_set_tag==snap)&&(ds.system.cudk_set_state==3); }, function () {
 				jchaos.getChannel(culist, -1, function (data) {
 					var error = 0;
 					data.forEach(function (elem) {
