@@ -7,7 +7,7 @@
 		var jchaos = {};
 
 		jchaos.ops_on_going = 0;
-		jchaos.ops_abort=false;
+		jchaos.ops_abort = false;
 		jchaos.lastChannel = {};
 		jchaos.options = {
 			updateEachCall: false,
@@ -15,8 +15,8 @@
 			async: true,
 			limit_on_going: 10000,
 			history_page_len: 1000,
-			console_log:function(str){console.log(str);},
-			console_err:function(str){console.error(str);}
+			console_log: function (str) { console.log(str); },
+			console_err: function (str) { console.error(str); }
 
 		};
 		jchaos.setOptions = function (opt) {
@@ -28,13 +28,13 @@
 
 
 		}
-		jchaos.print= function(str){
-			 jchaos.options['console_log'](str);
+		jchaos.print = function (str) {
+			jchaos.options['console_log'](str);
 		}
-		jchaos.perror= function(str){
-			 jchaos.options['console_err'](str);
+		jchaos.perror = function (str) {
+			jchaos.options['console_err'](str);
 		}
-		jchaos.basicPost = function (func, params, handleFunc,handleFuncErr) {
+		jchaos.basicPost = function (func, params, handleFunc, handleFuncErr) {
 			var request;
 			if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 				XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -50,7 +50,7 @@
 						var json = JSON.parse(request.responseText);
 						return json;
 					} catch (err) {
-						var str = "jchaos.basicPost Error parsing json '" + err + "' body returned:'" + request.responseText + "' post:'"+params+"'";
+						var str = "jchaos.basicPost Error parsing json '" + err + "' body returned:'" + request.responseText + "' post:'" + params + "'";
 						console.error(str);
 						return null;
 					}
@@ -64,7 +64,7 @@
 			// request.setRequestHeader("Content-Type", 'application/json');
 			jchaos.ops_on_going++;
 			request.onreadystatechange = function (e) {
-				
+
 				//console.log("answer:"+request.status + " state:"+request.readyState);
 				if (request.readyState == 4) {
 					jchaos.ops_on_going--;
@@ -74,20 +74,20 @@
 							if (could_make_async) {
 								try {
 									handleFunc(json);
-								} catch(err){
+								} catch (err) {
 									console.trace("trace:");
-									var str = "handler function error:'"+err+"' url:'"+url+"' post data:'"+params+"' response:'"+request.responseText+"'";
+									var str = "handler function error:'" + err + "' url:'" + url + "' post data:'" + params + "' response:'" + request.responseText + "'";
 									console.log(str);
 								}
 							}
 							return json;
 
 						} catch (err) {
-							var str = "jchaos.basicPost Error parsing json '" + err + "' body returned:'" + request.responseText + "'"+ "' post:'"+params+"'";;
+							var str = "jchaos.basicPost Error parsing json '" + err + "' body returned:'" + request.responseText + "'" + "' post:'" + params + "'";;
 							//console.error(str);
 							console.log(str);
 							//throw str;
-							if(handleFuncErr!=null && (typeof handleFuncErr === "function")){
+							if (handleFuncErr != null && (typeof handleFuncErr === "function")) {
 								handleFuncErr(request.responseText);
 							} else {
 								if (could_make_async) {
@@ -99,9 +99,9 @@
 
 						}
 					} else {
-						var str = "POST " + url + " body:\"" + params + "\" went wrong, result:" + request.status + " state:" + request.readyState; 
+						var str = "POST " + url + " body:\"" + params + "\" went wrong, result:" + request.status + " state:" + request.readyState;
 						console.error(str);
-						if(handleFuncErr!=null && (typeof handleFuncErr === "function")){
+						if (handleFuncErr != null && (typeof handleFuncErr === "function")) {
 							handleFuncErr(request.responseText);
 						}
 					}
@@ -109,7 +109,7 @@
 
 			}
 			request.onerror = function (e) {
-				console.error("request error:"+request.statusText);
+				console.error("request error:" + request.statusText);
 				//throw "error:" + request.statusText;
 			};
 			//console.log("sending:"+params);
@@ -129,44 +129,44 @@
 			return parseInt(obj[key].$numberLong);
 		}
 		jchaos.setLongLong = function (obj, key, val) {
-                       if (!obj.hasOwnProperty(key)) {
-                               jchaos.addLongKey(obj, key, val.toString());
-                               return;
-                       }
+			if (!obj.hasOwnProperty(key)) {
+				jchaos.addLongKey(obj, key, val.toString());
+				return;
+			}
 
 		}
-               jchaos.normalizeDataset = function (obj) {
-                       jchaos.addLongKey(obj, 'dpck_hr_ats', "0");
-                       jchaos.addLongKey(obj, 'dpck_ats', "0");
-                       jchaos.addLongKey(obj, 'dpck_seq_id', "0");
-               }
-	    
+		jchaos.normalizeDataset = function (obj) {
+			jchaos.addLongKey(obj, 'dpck_hr_ats', "0");
+			jchaos.addLongKey(obj, 'dpck_ats', "0");
+			jchaos.addLongKey(obj, 'dpck_seq_id', "0");
+		}
+
 		jchaos.registerCU = function (cuid, obj, handleFunc) {
 			var str_url_cu = "/api/v1/producer/jsonregister/" + cuid;
-		    var dd = Date.now();
-		    jchaos.normalizeDataset(obj);
+			var dd = Date.now();
+			jchaos.normalizeDataset(obj);
 			jchaos.basicPost(str_url_cu, JSON.stringify(obj), handleFunc);
 		}
 
 		jchaos.pushCU = function (cuid, obj, handleFunc) {
 			var str_url_cu = "/api/v1/producer/jsoninsert/" + cuid;
 			var dd = Date.now();
-		    jchaos.setLongLong(obj, 'dpck_seq_id', jchaos.getLongLong(obj, 'dpck_seq_id') + 1);
-		    -                       jchaos.setLongLong(obj, 'dpck_ats', dd);
-                       jchaos.setLongLong(obj, 'dpck_hr_ats', dd * 1000);
+			jchaos.setLongLong(obj, 'dpck_seq_id', jchaos.getLongLong(obj, 'dpck_seq_id') + 1);
+			-                       jchaos.setLongLong(obj, 'dpck_ats', dd);
+			jchaos.setLongLong(obj, 'dpck_hr_ats', dd * 1000);
 
-                       if (typeof handleFunc !== "function") {
-                               jchaos.basicPost(str_url_cu, JSON.stringify(obj), null);
-                               return;
+			if (typeof handleFunc !== "function") {
+				jchaos.basicPost(str_url_cu, JSON.stringify(obj), null);
+				return;
 
-                       }
+			}
 
-		    jchaos.basicPost(str_url_cu, JSON.stringify(obj), function (datav) { handleFunc(datav); });
-		    
+			jchaos.basicPost(str_url_cu, JSON.stringify(obj), function (datav) { handleFunc(datav); });
+
 		}
-		jchaos.mdsBase = function (cmd, opt, handleFunc,errFunc) {
+		jchaos.mdsBase = function (cmd, opt, handleFunc, errFunc) {
 			var param = "cmd=" + cmd + "&parm=" + JSON.stringify(opt);
-			var ret = jchaos.basicPost("MDS", param, handleFunc,errFunc);
+			var ret = jchaos.basicPost("MDS", param, handleFunc, errFunc);
 			return ret;
 		}
 		/**
@@ -176,20 +176,20 @@
 		 * @param {*} _tag_type 1 means cycles 2 means ms time
 		 * @param {*} _tag_value tag value
 		 */
-		jchaos.tag= function(_tagname,_node_list,_tag_type,_tag_value,handleFunc,nok){
-			var value={};
-			value['dsndk_history_burst_tag']=_tagname;
-			value['dsndk_history_burst_type']=_tag_type;
-			value['dsndk_history_burst_value']=_tag_value;
+		jchaos.tag = function (_tagname, _node_list, _tag_type, _tag_value, handleFunc, nok) {
+			var value = {};
+			value['dsndk_history_burst_tag'] = _tagname;
+			value['dsndk_history_burst_type'] = _tag_type;
+			value['dsndk_history_burst_value'] = _tag_value;
 
 			if (_node_list instanceof Array) {
-				value['ndk_uid']=_node_list;
+				value['ndk_uid'] = _node_list;
 			} else {
-				value['ndk_uid']=[_node_list];
+				value['ndk_uid'] = [_node_list];
 			}
-			return jchaos.snapshot("","burst","",JSON.stringify(value),handleFunc,nok);
+			return jchaos.snapshot("", "burst", "", JSON.stringify(value), handleFunc, nok);
 		}
-		jchaos.snapshot = function (_name, _what, _node_list, value_, handleFunc,nok) {
+		jchaos.snapshot = function (_name, _what, _node_list, value_, handleFunc, nok) {
 			var opt = {};
 			if (_name instanceof Array) {
 				opt['names'] = _name;
@@ -214,7 +214,7 @@
 
 			}
 
-			return jchaos.mdsBase("snapshot", opt, handleFunc,nok);
+			return jchaos.mdsBase("snapshot", opt, handleFunc, nok);
 		}
 
 		/*get a US description
@@ -229,10 +229,10 @@
 			var ret = jchaos.node(_name, "set", "us", "", _json, null);
 			return ret;
 		}
-		jchaos.node = function (_name, _what, _type, _parent, value_, handleFunc,nok) {
+		jchaos.node = function (_name, _what, _type, _parent, value_, handleFunc, nok) {
 			var opt = {};
 			if (_name instanceof Array) {
-				if(_name.length==0){
+				if (_name.length == 0) {
 					return [];
 				}
 				opt['names'] = _name;
@@ -254,69 +254,69 @@
 					return;
 				}
 			}
-			return jchaos.mdsBase("node", opt, handleFunc,nok);
+			return jchaos.mdsBase("node", opt, handleFunc, nok);
 		}
 
-		jchaos.loadScript=function(_name,seqid,handleFunc){
-			var opt={};
-			var value={
-				"seq":seqid,
-				"script_name":_name
+		jchaos.loadScript = function (_name, seqid, handleFunc) {
+			var opt = {};
+			var value = {
+				"seq": seqid,
+				"script_name": _name
 			};
-			opt['name']="";
-			opt['what']="load";
-			opt['value']=value;
+			opt['name'] = "";
+			opt['what'] = "load";
+			opt['value'] = value;
 			return jchaos.mdsBase("script", opt, handleFunc);
 		}
-		jchaos.manageInstanceScript=function(script_name,script_seq,instance_name,create,handleFunc){
-			var opt={};
-			var script_desc={};
-			script_desc['script_seq']=Number(script_seq);
-			script_desc['script_name']=script_name;
+		jchaos.manageInstanceScript = function (script_name, script_seq, instance_name, create, handleFunc) {
+			var opt = {};
+			var script_desc = {};
+			script_desc['script_seq'] = Number(script_seq);
+			script_desc['script_name'] = script_name;
 
-			script_desc['instance_name']=instance_name;
-			script_desc['create']=create;
-			opt['name']="";
-			opt['what']="newInstance";
-			opt['value']=script_desc;
+			script_desc['instance_name'] = instance_name;
+			script_desc['create'] = create;
+			opt['name'] = "";
+			opt['what'] = "newInstance";
+			opt['value'] = script_desc;
 			return jchaos.mdsBase("script", opt, handleFunc);
 		}
-		jchaos.saveScript=function(value,handleFunc){
-			var opt={};
-		
-			opt['name']="";
-			opt['what']="save";
-			opt['value']=value;
-			return jchaos.mdsBase("script", opt, handleFunc);
-		}
-		jchaos.rmScript=function(value,handleFunc){
-			var opt={};
-		
-			opt['name']="";
-			opt['what']="del";
-			opt['value']=value;
-			return jchaos.mdsBase("script", opt, handleFunc);
-		}
-		jchaos.searchScriptInstance=function(script_name,search_string,handleFunc){
-			var opt={};
-			var script_desc={};
-			script_desc['script_name']=script_name;
-			script_desc['search_string']=search_string;
+		jchaos.saveScript = function (value, handleFunc) {
+			var opt = {};
 
-			opt['name']="";
-			opt['what']="searchInstance";
-			opt['value']=script_desc;
+			opt['name'] = "";
+			opt['what'] = "save";
+			opt['value'] = value;
 			return jchaos.mdsBase("script", opt, handleFunc);
 		}
-		jchaos.updateScriptInstance=function(script_instance,script_base_description,handleFunc){
-			var opt={};
-			var script_desc={};
-			script_desc['script_instance']=script_instance;
-			script_desc['script_base_description']=script_base_description;
+		jchaos.rmScript = function (value, handleFunc) {
+			var opt = {};
 
-			opt['name']="";
-			opt['what']="bind";
-			opt['value']=script_desc;
+			opt['name'] = "";
+			opt['what'] = "del";
+			opt['value'] = value;
+			return jchaos.mdsBase("script", opt, handleFunc);
+		}
+		jchaos.searchScriptInstance = function (script_name, search_string, handleFunc) {
+			var opt = {};
+			var script_desc = {};
+			script_desc['script_name'] = script_name;
+			script_desc['search_string'] = search_string;
+
+			opt['name'] = "";
+			opt['what'] = "searchInstance";
+			opt['value'] = script_desc;
+			return jchaos.mdsBase("script", opt, handleFunc);
+		}
+		jchaos.updateScriptInstance = function (script_instance, script_base_description, handleFunc) {
+			var opt = {};
+			var script_desc = {};
+			script_desc['script_instance'] = script_instance;
+			script_desc['script_base_description'] = script_base_description;
+
+			opt['name'] = "";
+			opt['what'] = "bind";
+			opt['value'] = script_desc;
 			return jchaos.mdsBase("script", opt, handleFunc);
 		}
 		jchaos.variable = function (_name, _what, value_, handleFunc) {
@@ -331,13 +331,13 @@
 				try {
 					if (!(value_ instanceof Object)) {
 						JSON.parse(param);
-	
+
 					}
 					JSON.parse(value_);
 					opt['value'] = JSON.stringify(value_);
 
 				} catch (e) {
-					opt['value'] =value_;
+					opt['value'] = value_;
 				}
 			}
 
@@ -390,20 +390,17 @@
 			 
 		 }}
 		 */
-		jchaos.findCUByImplementation=function(impl,alive,handleFunc){
-			var implList=[];
-			jchaos.search("","cu",alive,function(lscu){
-				desclist=jchaos.getDesc(lscu,null);
-				desclist.forEach(function(elem){
-					if(String(elem.instance_description.control_unit_implementation).includes(impl)){
+		jchaos.findCUByImplementation = function (impl, alive, handleFunc) {
+			var implList = [];
+			jchaos.search("", "cu", alive, function (lscu) {
+				jchaos.getDesc(lscu, function (desclist) {
+					desclist.forEach(function (elem) {
+						if (String(elem.instance_description.control_unit_implementation).includes(impl)) {
 							implList.push(elem.ndk_uid);
-
-					}
-					
-
+						}
+					});
+					handleFunc(implList);
 				});
-				handleFunc(implList);
-
 			});
 		}
 		/**
@@ -418,21 +415,21 @@
 			jchaos.search("", "cu", false, function (data) {
 				cu_to_search = data;
 				jchaos.getChannel(cu_to_search, 4, function (ds) {
-				//	console.log("status:"+JSON.stringify(ds));
-					ds.forEach(function(elem){
-						if( elem.hasOwnProperty("nh_status")){
+					//	console.log("status:"+JSON.stringify(ds));
+					ds.forEach(function (elem) {
+						if (elem.hasOwnProperty("nh_status")) {
 							if (elem.nh_status == status_to_search) {
 								cu_stats.push(elem.ndk_uid)
 							}
 						}
-						
+
 					});
 					handleFunc(cu_stats);
 
 				});
 
-					});
-		
+			});
+
 		}
 		jchaos.convertArray2CSV = function (devs) {
 			var dev_array = "";
@@ -452,7 +449,7 @@
 			return dev_array;
 		}
 
-		jchaos.getChannel = function (devs, channel_id, handleFunc,badfunc) {
+		jchaos.getChannel = function (devs, channel_id, handleFunc, badfunc) {
 
 			var dev_array = jchaos.convertArray2CSV(devs);
 
@@ -470,7 +467,7 @@
 			if ((typeof handleFunc !== "function")) {
 				return jchaos.basicPost("CU", str_url_cu, null);
 			}
-			jchaos.basicPost("CU", str_url_cu, function (datav) { jchaos.lastChannel = datav; handleFunc(datav); },badfunc);
+			jchaos.basicPost("CU", str_url_cu, function (datav) { jchaos.lastChannel = datav; handleFunc(datav); }, badfunc);
 		}
 		jchaos.getDesc = function (devs, handleFunc) {
 
@@ -499,28 +496,28 @@
 			};
 			return jchaos.mdsBase("node", opt, handleFunc);
 		}
-		jchaos.setProperty = function (dev, prop, handleFunc,errFunc) {
+		jchaos.setProperty = function (dev, prop, handleFunc, errFunc) {
 			var opt = {
 				"name": dev,
 				"type": "cu",
 				"what": "set",
 				"value": { "properties": prop }
 			};
-			return jchaos.mdsBase("node", opt, handleFunc,errFunc);
+			return jchaos.mdsBase("node", opt, handleFunc, errFunc);
 		}
-		jchaos.loadUnload = function (dev, value, handleFunc,nok) {
+		jchaos.loadUnload = function (dev, value, handleFunc, nok) {
 
 			var opt = {
-				
+
 				"type": "cu",
 				"what": value ? "load" : "unload",
 			};
-			if(dev instanceof Array){
-				opt['names']=dev;
+			if (dev instanceof Array) {
+				opt['names'] = dev;
 			} else {
-				opt['name']=dev;
+				opt['name'] = dev;
 			}
-			jchaos.mdsBase("node", opt, handleFunc,nok);
+			jchaos.mdsBase("node", opt, handleFunc, nok);
 		}
 		jchaos.forceState = function (devs, state, handleFunc) {
 			jchaos.getChannel(devs, 4, function (data) {
@@ -612,21 +609,21 @@
 				});
 			});
 		}
-		jchaos.setAttribute = function (devs, attr, value,ok,nok) {
+		jchaos.setAttribute = function (devs, attr, value, ok, nok) {
 			//var parm="{\""+attr+"\":\""+value+"\"}";
 			var parm = {};
 			parm[attr] = value;
-			jchaos.sendCUCmd(devs, "attr", parm, ok,nok);
+			jchaos.sendCUCmd(devs, "attr", parm, ok, nok);
 		}
 
 		/*
 		 * Send a command to a set of devices
 		 * 
 		 * */
-		jchaos.sendCUCmd = function (devs, cmd, param,handleFunc,handleFuncErr) {
-			jchaos.sendCUFullCmd(devs,cmd,param,0,0,handleFunc,handleFuncErr);
+		jchaos.sendCUCmd = function (devs, cmd, param, handleFunc, handleFuncErr) {
+			jchaos.sendCUFullCmd(devs, cmd, param, 0, 0, handleFunc, handleFuncErr);
 		}
-		jchaos.sendCUFullCmd = function (devs, cmd, param, force,prio,handleFunc,handleFuncErr) {
+		jchaos.sendCUFullCmd = function (devs, cmd, param, force, prio, handleFunc, handleFuncErr) {
 			var dev_array = jchaos.convertArray2CSV(devs);
 			var params = "";
 			if (dev_array == "") {
@@ -644,14 +641,14 @@
 				params = param;
 
 			}
-			var str_url_cu = "dev=" + dev_array + "&cmd=" + cmd +"&mode="+force+"&prio="+prio;
+			var str_url_cu = "dev=" + dev_array + "&cmd=" + cmd + "&mode=" + force + "&prio=" + prio;
 			if (params != "") {
 				str_url_cu = str_url_cu + "&parm=" + params;
 			}
 			if ((typeof handleFunc !== "function")) {
 				return jchaos.basicPost("CU", str_url_cu, null);
 			}
-			jchaos.basicPost("CU", str_url_cu, handleFunc,handleFuncErr );
+			jchaos.basicPost("CU", str_url_cu, handleFunc, handleFuncErr);
 		}
 		/**
 		 * 
@@ -664,7 +661,7 @@
 		 * @param {string[] tags optional} tagsv 
 
 		 */
-		jchaos.getHistory = function (devs, channel, start, stop, varname,handleFunc,tagsv) {
+		jchaos.getHistory = function (devs, channel, start, stop, varname, handleFunc, tagsv) {
 			var result = {
 				X: [],
 				Y: []
@@ -683,83 +680,83 @@
 			} else {
 				opt['end'] = stop;
 			}
-			if (tagsv instanceof Array){
-				opt['tags']=tagsv;
+			if (tagsv instanceof Array) {
+				opt['tags'] = tagsv;
 			}
 
 			opt['channel'] = channel;
 			opt['page'] = jchaos.options.history_page_len;
-			if(varname!=="undefined" && (typeof varname !=="string")){
+			if (varname !== "undefined" && (typeof varname !== "string")) {
 				opt['var'] = varname;
 			}
-			if(tagsv !=="undefined"){
-				if(tagsv instanceof Array){
-					opt["tags"]=tagsv;
+			if (tagsv !== "undefined") {
+				if (tagsv instanceof Array) {
+					opt["tags"] = tagsv;
 				} else {
-					opt["tags"]=[tagsv];
+					opt["tags"] = [tagsv];
 
 				}
 			}
 
-			jchaos.getHistoryBase(devs, opt, 1,0, result, handleFunc);
+			jchaos.getHistoryBase(devs, opt, 1, 0, result, handleFunc);
 
 		}
 
-		jchaos.fetchHistoryToZip=function(zipname,cams,start,stop,tagsv,updateCall){
+		jchaos.fetchHistoryToZip = function (zipname, cams, start, stop, tagsv, updateCall) {
 			var vcams;
-			if(cams instanceof Array){
-				vcams=cams;
+			if (cams instanceof Array) {
+				vcams = cams;
 			} else {
-				vams=[cams];
+				vams = [cams];
 			}
 			// need JSzip
-			var zipf= new JSZip();
-			var cnt=vcams.length;
-			var per=0.1;
+			var zipf = new JSZip();
+			var cnt = vcams.length;
+			var per = 0.1;
 			updateCall(
 				{
-					percent:per
+					percent: per
 				});
-			vcams.forEach(function(ci){
-				jchaos.getHistory(ci,0,start,stop,"",function(ds){
-					if(ds.Y[0].hasOwnProperty("FRAMEBUFFER")&& ds.Y[0].FRAMEBUFFER.hasOwnProperty("$binary")&&ds.Y[0].hasOwnProperty("FMT")){
-						ds.Y.forEach(function(img){
-						
-							var name=ci+"/"+img.dpck_seq_id+"_"+img.dpck_ats+"_"+img.FMT;
-							zipf.file(name,img.FRAMEBUFFER.$binary.base64,{base64:true});
-							console.log("zipping image: "+name + " into:"+zipname);
-						
-					});
+			vcams.forEach(function (ci) {
+				jchaos.getHistory(ci, 0, start, stop, "", function (ds) {
+					if (ds.Y[0].hasOwnProperty("FRAMEBUFFER") && ds.Y[0].FRAMEBUFFER.hasOwnProperty("$binary") && ds.Y[0].hasOwnProperty("FMT")) {
+						ds.Y.forEach(function (img) {
+
+							var name = ci + "/" + img.dpck_seq_id + "_" + img.dpck_ats + "_" + img.FMT;
+							zipf.file(name, img.FRAMEBUFFER.$binary.base64, { base64: true });
+							console.log("zipping image: " + name + " into:" + zipname);
+
+						});
 					} else {
-						var name=ci+".json";
-						zipf.file(name,JSON.stringify(ds.Y));
-						console.log("zipping dataset: "+name + " into:"+zipname);
+						var name = ci + ".json";
+						zipf.file(name, JSON.stringify(ds.Y));
+						console.log("zipping dataset: " + name + " into:" + zipname);
 					}
 
-					
-					if(--cnt == 0){
-						zipf.generateAsync({type:"blob"},updateCall).then(function (content) {
+
+					if (--cnt == 0) {
+						zipf.generateAsync({ type: "blob" }, updateCall).then(function (content) {
 							saveAs(content, zipname);
 						});
 					}
-				},tagsv);
+				}, tagsv);
 			});
-			
+
 
 		}
-		
-		jchaos.getHistoryBase = function (devs, opt, seq,runid, result, handleFunc) {
+
+		jchaos.getHistoryBase = function (devs, opt, seq, runid, result, handleFunc) {
 			var cmd = "queryhst";
 			var dev_array = jchaos.convertArray2CSV(devs);
-			
+
 			opt['seq'] = seq;
 			opt['runid'] = runid;
 
 			var str_url_cu = "dev=" + dev_array + "&cmd=" + cmd + "&parm=" + JSON.stringify(opt);
-			console.log("getHistory (seqid:"+seq+ " runid:"+runid+") start:"+opt.start+" end:"+opt.end+ " page:"+opt.page);
+			console.log("getHistory (seqid:" + seq + " runid:" + runid + ") start:" + opt.start + " end:" + opt.end + " page:" + opt.page);
 			jchaos.basicPost("CU", str_url_cu, function (datav) {
-				var ret=true;
-				if ((opt.var !=null) && (opt.var != "")) {
+				var ret = true;
+				if ((opt.var != null) && (opt.var != "")) {
 					datav.data.forEach(function (ele) {
 						result.X.push(Number(ele.ts));
 						result.Y.push(ele.val);
@@ -772,9 +769,9 @@
 
 				}
 				if (jchaos.options.updateEachCall) {
-					ret=handleFunc(result);
-					result.X=[];
-					result.Y=[];
+					ret = handleFunc(result);
+					result.X = [];
+					result.Y = [];
 				} else {
 					if (datav.end == 1) {
 						// update if 0 or something else
@@ -782,30 +779,30 @@
 
 					}
 				}
-				if (ret && (datav.end ==0)) {
-					jchaos.getHistoryBase(devs, opt, datav.seqid,datav.runid, result, handleFunc);
+				if (ret && (datav.end == 0)) {
+					jchaos.getHistoryBase(devs, opt, datav.seqid, datav.runid, result, handleFunc);
 				}
 			});
 		}
 
 
 
-		jchaos.checkPeriodiocally=function(str,retry, checkFreq, checkFunc, okhandle, nokhandle) {
+		jchaos.checkPeriodiocally = function (str, retry, checkFreq, checkFunc, okhandle, nokhandle) {
 			setTimeout(function () {
 				if (checkFunc()) {
 					okhandle();
 				} else if (--retry > 0) {
-					console.log(str+" retry check... " + retry);
+					console.log(str + " retry check... " + retry);
 
 					jchaos.checkPeriodiocally(str, retry, checkFreq, checkFunc, okhandle, nokhandle);
 				} else {
-					console.log(str+ " expired maximum number of retry...");
+					console.log(str + " expired maximum number of retry...");
 
 					nokhandle();
 				}
 			}, checkFreq);
 		};
-		
+
 		/**
 		 * This function check for a variable change on a 'devlist', for 'retry' times, checking every 'checkFreq'
 		 * 'checkFunc' takes in input the live and realize the check 
@@ -813,52 +810,52 @@
 		 * nokhandle if fails
 		 * */
 
-		jchaos.checkLive = function (str,devlist, retry, checkFreq, checkFunc, okhandle, nokhandle) {
+		jchaos.checkLive = function (str, devlist, retry, checkFreq, checkFunc, okhandle, nokhandle) {
 			var tot_ok = 0;
 			//console.log(" checking Live of " + devlist + " every:" + checkFreq + " ms");
 			jchaos.getChannel(devlist, -1, function (ds) {
-				var cnt=0;
+				var cnt = 0;
 				ds.forEach(function (elem) {
-					if(elem.hasOwnProperty("health") && elem.health.hasOwnProperty("ndk_uid")){
+					if (elem.hasOwnProperty("health") && elem.health.hasOwnProperty("ndk_uid")) {
 						if (checkFunc(elem)) {
 							tot_ok++;
-							console.log("\x1B[1m"+str+"\x1B[1m\t\x1B[32m\x1B[1mOK\x1B[22m\x1B[39m \x1B[1m" + elem.health.ndk_uid + "\x1B[22m " + tot_ok + "/" + devlist.length);
-				
+							console.log("\x1B[1m" + str + "\x1B[1m\t\x1B[32m\x1B[1mOK\x1B[22m\x1B[39m \x1B[1m" + elem.health.ndk_uid + "\x1B[22m " + tot_ok + "/" + devlist.length);
+
 						} else {
-							if(retry>1){
-								console.log("\x1B[1m"+str+"\x1B[1m\t-"+retry+"- \x1B[33m\x1B[1m" + elem.health.ndk_uid + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
+							if (retry > 1) {
+								console.log("\x1B[1m" + str + "\x1B[1m\t-" + retry + "- \x1B[33m\x1B[1m" + elem.health.ndk_uid + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
 							} else {
-								console.log("\x1B[1m"+str+"\x1B[1m\t-"+retry+"- \x1B[31m\x1B[1m" + elem.health.ndk_uid + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
+								console.log("\x1B[1m" + str + "\x1B[1m\t-" + retry + "- \x1B[31m\x1B[1m" + elem.health.ndk_uid + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
 							}
 						}
-				} else {
-					if(retry>1){
-						console.log("\x1B[1m"+str+"\x1B[1m\t-"+retry+"- \x1B[33m\x1B[1m missing/malformed health " + devlist[cnt]+ "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
 					} else {
-						console.log("\x1B[1m"+str+"\x1B[1m\t-"+retry+"- \x1B[31m\x1B[1m missing/malformed health " + devlist[cnt] + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
+						if (retry > 1) {
+							console.log("\x1B[1m" + str + "\x1B[1m\t-" + retry + "- \x1B[33m\x1B[1m missing/malformed health " + devlist[cnt] + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
+						} else {
+							console.log("\x1B[1m" + str + "\x1B[1m\t-" + retry + "- \x1B[31m\x1B[1m missing/malformed health " + devlist[cnt] + "\x1B[22m\x1B[39m " + tot_ok + "/" + devlist.length);
+						}
 					}
-				}
-				cnt++;
+					cnt++;
 				});
-			},function(){
-				console.log(str+" getChannel failed " + retry);
+			}, function () {
+				console.log(str + " getChannel failed " + retry);
 
 				if (tot_ok == devlist.length) {
 					okhandle();
 					return;
 				}
 			});
-			
+
 			setTimeout(function () {
 				if (tot_ok == devlist.length) {
 					okhandle();
 					return;
 				} else if (--retry > 0) {
-					console.log(str+" retry check... " + retry);
+					console.log(str + " retry check... " + retry);
 
-					jchaos.checkLive(str,devlist, retry, checkFreq, checkFunc, okhandle, nokhandle);
+					jchaos.checkLive(str, devlist, retry, checkFreq, checkFunc, okhandle, nokhandle);
 				} else {
-					console.log(str+ " expired maximum number of retry...");
+					console.log(str + " expired maximum number of retry...");
 
 					nokhandle();
 				}
