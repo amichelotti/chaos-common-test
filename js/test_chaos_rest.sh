@@ -13,6 +13,11 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 fi
 start_services || end_test 1 "cannot start services"
+rm -rf nodejs-external-driver-server-test
+git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+cd nodejs-external-driver-server-test
+./launch.sh
+cd -
 
 
 if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
