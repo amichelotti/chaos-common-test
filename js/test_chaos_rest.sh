@@ -1,7 +1,10 @@
 source $CHAOS_TOOLS/common_util.sh
+
+
 start_test
 
 info_mesg "REST tests" " $0"
+
 if ! which node>&/dev/null;then
     if which nodejs >& /dev/null;then
 	info_mesg "nodejs " "found"
@@ -12,12 +15,14 @@ if ! which node>&/dev/null;then
     ln -sf `which nodejs` node
     export PATH=$PATH:.
 fi
-start_services || end_test 1 "cannot start services"
+## start WS external driver service
 rm -rf nodejs-external-driver-server-test
 git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
 cd nodejs-external-driver-server-test
 ./launch.sh
 cd -
+
+start_services || end_test 1 "cannot start services"
 
 
 if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
