@@ -66,11 +66,12 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 	it('retriving BTF QUADRUPOLES/DIPOLE', function (done) {
 		this.timeout(60000);
 
-		jchaos.search(["BTF/QUADRUPOLE", "BTF/DIPOLE]"], "cu", true, function (data) {
+		jchaos.search(["BTF/QUADRUPOLE", "BTF/DIPOLE","TEST/QUADRUPOLE/EXTERNAL"], "cu", true, function (data) {
 			btf = data;
 			console.log("\t PowerSupply:"+btf);
 			done(btf.length <= 0);
 		});
+	
 	});
 	describe('preparing snapshots', function () {
 		it('zero-stby', function (done) {
