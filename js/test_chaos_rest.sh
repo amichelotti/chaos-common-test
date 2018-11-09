@@ -14,6 +14,7 @@ if ! which node>&/dev/null;then
 
     ln -sf `which nodejs` node
     export PATH=$PATH:.
+
 fi
 ## start WS external driver service
 rm -rf nodejs-external-driver-server-test
