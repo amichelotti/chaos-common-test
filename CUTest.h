@@ -16,12 +16,9 @@
 #include <map>
 #include <common/debug/core/debug.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#undef CHAOSFramework_UIToolkitCWrapper_h
-#include <chaos/ui_toolkit/ChaosUIToolkit.h>
-#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
-#include <chaos/ui_toolkit/HighLevelApi/HLDataApi.h>
 
-#include <chaos/ui_toolkit/ChaosUIToolkitCWrapper.h>
+#include <chaos_metadata_service_client/ChaosMetadataServiceClient.h>
+
 #include "CUTestReport.h"
 #if 0
 #define PERFORM_CMD(x,y) \
@@ -39,7 +36,7 @@ protected:
     unsigned int devID;
     std::string cu_name;
     long test_timeo;
-    chaos::ui::DeviceController *controller;
+    chaos::metadata_service_client::node_controller::CUController* controller;
 
     chaos::CUStateKey::ControlUnitState device_state;
 
@@ -71,11 +68,10 @@ public:
     CUTest(std::string cuname):cu_name(cuname){
         int err;
         running = 0;
-        controller = chaos::ui::HLDataApi::getInstance()->getControllerForDeviceID(cuname, 40000);
-        err=getNewControllerForDeviceID(cuname.c_str(), &devID);
-        if(controller == NULL || err!=0){
-            CHAOS_EXCEPTION(-100,"cannot allocate controller for:"+cuname);
-        }
+
+        chaos::metadata_service_client::ChaosMetadataServiceClient::getInstance()->getNewCUController(cuname,&controller);
+   
+ 
         controller->setRequestTimeWaith(5000000);
     }
 
@@ -233,7 +229,7 @@ public:
                 int ret;
                 long long duration;
                 if(timeo_ms>0){
-                    setControllerTimeout((uint32_t)devID, timeo_ms);
+               //     setControllerTimeout((uint32_t)devID, timeo_ms);
                     test_timeo = timeo_ms;
                 }
                 boost::posix_time::ptime start=boost::posix_time::microsec_clock::local_time();
