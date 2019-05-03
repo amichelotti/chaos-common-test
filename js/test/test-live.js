@@ -134,7 +134,7 @@ describe("CHAOS LIVE TESTS", function () {
 			},10000);
 		});
 		it('Test all datasets',function(done){
-			jchaos.checkLive('Live check',cu_in_start, 15, 2000, function (ds) {
+			jchaos.checkLive('Live check',cu_in_start, 20, 2000, function (ds) {
 				var ret=false;
 			//	console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
 				if(typeof(JSON.stringify(ds.system))=='undefined'){
@@ -205,7 +205,7 @@ describe("CHAOS LIVE TESTS", function () {
 			});
 			it('check for bypass command set TRUE', function (done) {
 				this.timeout(60000);
-				jchaos.checkLive('check for bypass command set TRUE',cu_in_start, 15, 2000, function (ds) { return (ds.system.cudk_bypass_state == true); }, function () { done(0); }, function () { done(1); });
+				jchaos.checkLive('check for bypass command set TRUE',cu_in_start, 20, 2000, function (ds) { return (ds.system.cudk_bypass_state == true); }, function () { done(0); }, function () { done(1); });
 			
 			});
 		it('bypass command set FALSE', function (done) {
@@ -231,7 +231,7 @@ describe("CHAOS LIVE TESTS", function () {
 		it('check for bypass command set FALSE', function (done) {
 			this.timeout(60000);
 
-			jchaos.checkLive('check for bypass command set FALSE',cu_in_start, 15, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
+			jchaos.checkLive('check for bypass command set FALSE',cu_in_start, 20, 2000, function (ds) { return (ds.system.cudk_bypass_state == false); }, function () { done(0); }, function () { done(1); });
 
 
 		});

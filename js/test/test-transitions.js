@@ -47,7 +47,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 			//jchaos.sendCUCmd(cu_status, "stop", "", null);
 			jchaos.node(cu_status, "stop", "cu", null, null);
 
-			jchaos.checkLive('check Start->Stop',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check Start->Stop',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
 		});
 	});
 	it('check Stop->Deinit', function (done) {
@@ -59,7 +59,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 				done();
 //		    jchaos.sendCUCmd(cu_status, "deinit", "", null);
 		    jchaos.node(cu_status, "deinit", "cu", null, null);
-			jchaos.checkLive('check Stop->Deinit',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check Stop->Deinit',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -73,7 +73,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 				done();
 //		    jchaos.sendCUCmd(cu_status, "deinit", "", null);
 		    jchaos.node(cu_status, "init", "cu", null, null);
-		    jchaos.checkLive('check Deinit->Init',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
+		    jchaos.checkLive('check Deinit->Init',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -88,7 +88,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 			//jchaos.sendCUCmd(cu_status, "start", "", null);
 			jchaos.node(cu_status, "start", "cu", null, null);
 
-			jchaos.checkLive('check Init->Start',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check Init->Start',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -102,7 +102,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 			//jchaos.sendCUCmd(cu_status, "stop", "", null);
 			jchaos.node(cu_status, "stop", "cu", null, null);
 
-			jchaos.checkLive('check2 Start->Stop',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check2 Start->Stop',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, function () { done(0); }, function () { done(1) });
 		});
 	});
 	it('check2 Stop->Deinit', function (done) {
@@ -113,7 +113,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 			if (cu_status.length == 0)
 				done();
 		    jchaos.node(cu_status, "deinit", "cu", null, null);
-			jchaos.checkLive('check2 Stop->Deinit',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check2 Stop->Deinit',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Deinit"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -129,7 +129,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 	 		/*cu_status.forEach(function (elem) {
 	 			jchaos.loadUnload(elem, false, null);
 	 		});*/
-	 		jchaos.checkLive('check Deinit->Unload',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Unload"); }, function () { done(0); }, function () { done(1) });
+	 		jchaos.checkLive('check Deinit->Unload',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Unload"); }, function () { done(0); }, function () { done(1) });
 
 	 	});
 	 });
@@ -146,7 +146,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 			 });*/
 			 jchaos.node(cu_status, "load", "cu", null, null);
 
-	 		jchaos.checkLive('Unload->Load',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Load"); }, function () { done(0); }, function () { done(1) });
+	 		jchaos.checkLive('Unload->Load',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Load"); }, function () { done(0); }, function () { done(1) });
 	 	});
 	 });
 	  it('check Load->Init', function (done) {
@@ -157,7 +157,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 	 		if (cu_status.length == 0)
 	 			done();
 			jchaos.node(cu_status, "init", "cu", null, null);
-	 		jchaos.checkLive('Load->Init',cu_status, 15, 1000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
+	 		jchaos.checkLive('Load->Init',cu_status, 20, 1000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
 
 	 	});
      });
@@ -172,7 +172,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 
 			//jchaos.sendCUCmd(cu_status, "start", "", null);
 
-			jchaos.checkLive('check3 Init->Start',cu_status, 15, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('check3 Init->Start',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
