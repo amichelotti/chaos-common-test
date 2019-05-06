@@ -103,10 +103,14 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 			});
 			snapshot_dataset_list.push(snapinfo);
 			setTimeout(function () {
-				prepared_snapshot.push("zero-stby");
+			    prepared_snapshot.push("zero-stby");
+			    	if(nok){
+					console.log("zero-stby NOT SET, missing:"+nok);
+				}
+
 				done(nok);
 
-			}, 2000);
+			}, 5000);
 
 		});
 		it('2-increments-oper', function (done) {
