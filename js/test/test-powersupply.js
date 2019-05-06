@@ -142,9 +142,12 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 			});
 			setTimeout(function () {
 				prepared_snapshot.push("2-increments-oper");
+				if(nok){
+					console.log("2-increments-oper NOT SET, missing:"+nok);
+				}
 				done(nok);
 
-			}, 2000);
+			}, 5000);
 
 		});
 		it('check for snapshots in the system', function (done) {
