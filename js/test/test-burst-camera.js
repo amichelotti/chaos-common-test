@@ -37,7 +37,7 @@ jchaos.setOptions(options);
 
 
 describe('TEST BURST FEATURE', function () {
-	this.timeout(60000);
+	this.timeout(120000);
 	it('check cudk_burst_state and cudk_burst_tag keys in health, and burst state == false', function (done) {
 		var cu_status = [];
 		jchaos.getCUStatus("Start", function (ll) {

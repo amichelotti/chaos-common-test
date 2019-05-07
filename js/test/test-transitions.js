@@ -36,7 +36,7 @@ jchaos.setOptions(options);
 
 
 describe('CHAOS TEST TRANSITIONS', function () {
-	this.timeout(60000);
+	this.timeout(120000);
 	it('check Start->Stop', function (done) {
 		var cu_status = [];
 		jchaos.getCUStatus("Start", function (ll) {
