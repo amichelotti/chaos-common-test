@@ -66,6 +66,10 @@ errors=0
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
 tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
+export WEBUI_SERVER="localhost:8081"
+if [ -n "$CHAOS_WEBUI" ];then
+    export WEBUI_SERVER=$CHAOS_WEBUI
+fi
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 $t  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
     ok_mesg "mocha unit server test $t"
