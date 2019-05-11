@@ -69,7 +69,7 @@ tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
     export WEBUI_SERVER=$CHAOS_WEBUI
-    info_msg "* setting SERVER to:" "$WEBUI_SERVER"
+    info_mesg "* setting SERVER to:" "$WEBUI_SERVER"
 fi
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 $t  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
