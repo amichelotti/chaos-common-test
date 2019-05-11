@@ -57,8 +57,8 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 	end_test 1 "registration failed"
     fi
 
-info_mesg "waiting 10s ..."
-sleep 10
+#info_mesg "waiting 10s ..."
+#sleep 10
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
