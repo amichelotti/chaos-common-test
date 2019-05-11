@@ -57,8 +57,8 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 	end_test 1 "registration failed"
     fi
 
-#info_mesg "waiting 10s ..."
-#sleep 10
+info_mesg "waiting 5s ..."
+sleep 5
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
@@ -69,7 +69,7 @@ tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
     export WEBUI_SERVER=$CHAOS_WEBUI
-    info "* setting SERVER to:$WEBUI_SERVER"
+    info_msg "* setting SERVER to:" "$WEBUI_SERVER"
 fi
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 $t  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
