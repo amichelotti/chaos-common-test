@@ -21,6 +21,8 @@ rm -rf nodejs-external-driver-server-test
 git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
 cd nodejs-external-driver-server-test
 ./launch.sh
+sleep 5
+
 cd -
 
 start_services || end_test 1 "cannot start services"
