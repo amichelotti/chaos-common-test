@@ -17,11 +17,16 @@ if ! which node>&/dev/null;then
 
 fi
 ## start WS external driver service
-rm -rf nodejs-external-driver-server-test
-git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
-cd nodejs-external-driver-server-test
-./launch.sh
-cd -
+if [ -z $EXTERNAL_DRIVER_SERVER ];then
+    rm -rf nodejs-external-driver-server-test
+    git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+    cd nodejs-external-driver-server-test
+    ./launch.sh
+    cd -
+else
+    info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
+    sed "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $CHAOS_TOOLS/etc/localhost/MDSConfig.json
+fi
 
 start_services || end_test 1 "cannot start services"
 
