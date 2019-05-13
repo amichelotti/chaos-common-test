@@ -17,6 +17,7 @@ if ! which node>&/dev/null;then
 
 fi
 ## start WS external driver service
+
 if [ -z $EXTERNAL_DRIVER_SERVER ];then
     rm -rf nodejs-external-driver-server-test
     git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
@@ -62,8 +63,8 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 	end_test 1 "registration failed"
     fi
 
-info_mesg "waiting 10s ..."
-sleep 10
+info_mesg "waiting 5s ..."
+sleep 5
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
@@ -71,6 +72,11 @@ errors=0
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
 tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
+export WEBUI_SERVER="localhost:8081"
+if [ -n "$CHAOS_WEBUI" ];then
+    export WEBUI_SERVER=$CHAOS_WEBUI
+    info_mesg "setting SERVER to:" "$WEBUI_SERVER"
+fi
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 $t  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
     ok_mesg "mocha unit server test $t"
