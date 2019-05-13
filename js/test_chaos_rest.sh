@@ -18,20 +18,6 @@ if ! which node>&/dev/null;then
 fi
 ## start WS external driver service
 
-if [ -z $EXTERNAL_DRIVER_SERVER ];then
-    rm -rf nodejs-external-driver-server-test
-    git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
-    cd nodejs-external-driver-server-test
-    ./launch.sh
-    cd -
-else
-    info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
-    sed "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $CHAOS_TOOLS/etc/localhost/MDSConfig.json
-fi
-
-start_services || end_test 1 "cannot start services"
-
-
 if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
     MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.json
     ok_mesg "found $MDS_TEST_CONF"
@@ -40,7 +26,22 @@ else
     end_test 1 "Cannot find MDS_TEST_CONF"
 fi
    
-info_mesg "using configuration " "$CHAOS_TOOLS/etc/localhost/MDSConfig.json"
+info_mesg "using configuration " "$MDS_TEST_CONF"
+
+if [ -z $EXTERNAL_DRIVER_SERVER ];then
+    rm -rf nodejs-external-driver-server-test
+    git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+    cd nodejs-external-driver-server-test
+    ./launch.sh
+    cd -
+else
+    info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
+    sed "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $MDS_TEST_CONF
+fi
+
+start_services || end_test 1 "cannot start services"
+
+
 if run_proc "$CHAOS_PREFIX/bin/ChaosMDSCmd --mds-conf $MDS_TEST_CONF $CHAOS_OVERALL_OPT >& $CHAOS_PREFIX/log/ChaosMDSCmd.log;" "ChaosMDSCmd"; then
     ok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
 else
