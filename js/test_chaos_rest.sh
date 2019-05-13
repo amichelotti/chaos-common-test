@@ -36,7 +36,7 @@ if [ -z $EXTERNAL_DRIVER_SERVER ];then
     cd -
 else
     info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
-    sed "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $MDS_TEST_CONF
+    sed -i "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $MDS_TEST_CONF
 fi
 
 start_services || end_test 1 "cannot start services"
