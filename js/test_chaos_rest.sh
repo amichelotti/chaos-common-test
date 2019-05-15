@@ -22,8 +22,8 @@ if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
     MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.json
     ok_mesg "found $MDS_TEST_CONF"
 else
-    nok_mesg "cannot find $CHAOS_TOOLS/etc/localhost/MDSConfig.json"
-    end_test 1 "Cannot find MDS_TEST_CONF"
+    nok_mesg "cannot find $MDS_TEST_CONF"
+    end_test 1 "Cannot find $MDS_TEST_CONF"
 fi
    
 info_mesg "using configuration " "$MDS_TEST_CONF"
