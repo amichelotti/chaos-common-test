@@ -17,24 +17,31 @@ if ! which node>&/dev/null;then
 
 fi
 ## start WS external driver service
-rm -rf nodejs-external-driver-server-test
-git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
-cd nodejs-external-driver-server-test
-./launch.sh
-cd -
-
-start_services || end_test 1 "cannot start services"
-
 
 if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
     MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.json
     ok_mesg "found $MDS_TEST_CONF"
 else
-    nok_mesg "cannot find $CHAOS_TOOLS/etc/localhost/MDSConfig.json"
-    end_test 1 "Cannot find MDS_TEST_CONF"
+    nok_mesg "cannot find $MDS_TEST_CONF"
+    end_test 1 "Cannot find $MDS_TEST_CONF"
 fi
    
-info_mesg "using configuration " "$CHAOS_TOOLS/etc/localhost/MDSConfig.json"
+info_mesg "using configuration " "$MDS_TEST_CONF"
+
+if [ -z $EXTERNAL_DRIVER_SERVER ];then
+    rm -rf nodejs-external-driver-server-test
+    git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+    cd nodejs-external-driver-server-test
+    ./launch.sh
+    cd -
+else
+    info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
+    sed -i "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $MDS_TEST_CONF
+fi
+
+start_services || end_test 1 "cannot start services"
+
+
 if run_proc "$CHAOS_PREFIX/bin/ChaosMDSCmd --mds-conf $MDS_TEST_CONF $CHAOS_OVERALL_OPT >& $CHAOS_PREFIX/log/ChaosMDSCmd.log;" "ChaosMDSCmd"; then
     ok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
 else
@@ -57,8 +64,8 @@ if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
 	end_test 1 "registration failed"
     fi
 
-info_mesg "waiting 10s ..."
-sleep 10
+info_mesg "waiting 5s ..."
+sleep 5
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
@@ -66,6 +73,11 @@ errors=0
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
 tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
+export WEBUI_SERVER="localhost:8081"
+if [ -n "$CHAOS_WEBUI" ];then
+    export WEBUI_SERVER=$CHAOS_WEBUI
+    info_mesg "setting SERVER to:" "$WEBUI_SERVER"
+fi
 for t in $tests;do
 if ./node_modules/mocha/bin/mocha --timeout 60000 $t  --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
     ok_mesg "mocha unit server test $t"
