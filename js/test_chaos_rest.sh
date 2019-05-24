@@ -17,9 +17,10 @@ if ! which node>&/dev/null;then
 
 fi
 ## start WS external driver service
-
-if [ -e "$CHAOS_TOOLS/../etc/localhost/MDSConfig.json" ];then
+if [ -z "$MDS_TEST_CONF" ];then
     MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.json
+fi
+if [ -f "$MDS_TEST_CONF" ];then
     ok_mesg "found $MDS_TEST_CONF"
 else
     nok_mesg "cannot find $MDS_TEST_CONF"
