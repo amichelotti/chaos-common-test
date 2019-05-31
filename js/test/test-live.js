@@ -281,43 +281,28 @@ describe("CHAOS LIVE TESTS", function () {
 
 		});
 	});
+    describe('Logging Test',function(){
+	it('Search all logs',function(done){
+		jchaos.log(cualive, "search", "all", 0, 10000000000000, function (data) {
+			var cnt=0
+			if (data.hasOwnProperty("result_list")) {
+				var arr=data.result_list;
+				arr.forEach(function (item) {
+					//console.log("data:" +JSON.stringify(item));
 
-	/*
-		describe('STATUS Transition Test ',function(){
-			this.timeout(60000);
-			it('check Start->Stop',function(done){
-				var cu_in_start=[];
-				var cu_in_stop=[];
-				jchaos.getCUStatus("Start",function(ll){
-					console.log("N. CU in Start:"+ll.length);
-					cu_in_start=ll;
-					if(ll.length==0)
-						done();
-					jchaos.forceState(cu_in_start,"Stop",function(d){
-						d.forEach(function(elem){
-							if(elem.health.nh_status != "Stop"){
-								assert.ok(false," Transition Start->Stop of "+elem.health.ndk_uid + " failed state is '"+elem.health.nh_status+"'" );
-							}
-						});
-						done();
-					});
+					if(item.hasOwnProperty("mdsndk_nl_sid")){
+						cnt++;
+						//console.log(" counter:"+cnt+" expected:"+arr.length+" json:"+JSON.stringify(item));
+					}
+				
+					
 				});
-				setTimeout(function(){
-					var some_error=0;
-					jchaos.getChannel(cu_in_start,4,function(data){
-						data.forEach(function(elem){
-							if(elem.health.nh_status != "Stop"){
-								some_error++;
-								console.error(" Transition Start->Stop of "+elem.health.ndk_uid + " failed state is '"+elem.health.nh_status+"'" );
-							}				
-						});
-	
-						done(some_error);
-	
-					});
-				},2000);
-			});
-	
-		});
-	*/
+				done((cnt!=arr.length));	
+
+			}
+
+	});
+    });
+});
+
 });	
