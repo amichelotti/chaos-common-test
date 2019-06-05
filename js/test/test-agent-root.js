@@ -23,7 +23,7 @@ process.argv.forEach(function (val, index, array) {
 		console.log(val + "=" + array[index + 1]);
 	}
 });
-var root_program = "#include <driver/misc/models/cernRoot/rootUtil.h> int simpleCounter(int max){ for(int cnt=0;cnt<max;cnt++){std::cout<<\"counter:\"<<cnt<<std::endl;sleep(1);} std::cout<<\"END COUNTER:\"<<cnt<<std::endl;return cnt;}";
+var root_program = "#include <driver/misc/models/cernRoot/rootUtil.h>\nint simpleRootCounter(int max){\n int cnt;for(cnt=0;cnt<max;cnt++){std::cout<<\"counter:\"<<cnt<<std::endl;sleep(1);} std::cout<<\"END COUNTER:\"<<cnt<<std::endl;exit(0);}";
 
 
 jchaos.setOptions(options);
@@ -41,7 +41,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		script['eudk_script_content'] = root_program;
 		script['eudk_script_language'] = "CPP";
 		script['script_description'] = "CHAOS AGENT ROOT TEST";
-		script['default_argument'] = "simpleCounter(10)";
+		script['default_argument'] = "(5)";
 		script['workingdir'] = "";
 		console.log("saving script:" + JSON.stringify(script));
 		jchaos.saveScript(script, function (data) {
@@ -56,7 +56,8 @@ describe("CHAOS AGENT ROOT TEST", function () {
 			list_algo.forEach(function (elem) {
 				console.log(" found " + elem.script_name + " id:" + elem.seq)
 			});
-			jchaos.loadScript(list_algo[0].script_name, list_algo[0].seq, function (data) {
+		    // take the last
+		    jchaos.loadScript(list_algo[0].script_name, list_algo[list_algo.length-1].seq, function (data) {
 				var agent_server = "localhost";
 				var launch_arg = "";
 				if (process.env.hasOwnProperty('AGENT_SERVER')) {
@@ -66,7 +67,8 @@ describe("CHAOS AGENT ROOT TEST", function () {
 				var language = data['eudk_script_language'];
 				var defargs = data['default_argument'];
 				var workingdir = data['workingdir'];
-				console.log("loadScript of :" + JSON.stringify(data));
+			        console.log("loadScript of :" + JSON.stringify(data));
+			data['eudk_script_content']=btoa(data['eudk_script_content']);
 				jchaos.rmtUploadScript(agent_server + ":8071", data, function (p) {
 					console.log("rmtUploadScript:" + JSON.stringify(p));
 					jchaos.rmtGetEnvironment(agent_server + ":8071", "CHAOS_PREFIX", function (r) {
@@ -101,7 +103,8 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.checkPeriodiocally("Check Tests ents", 30, 1000, function () {
 			var stat = jchaos.rmtListProcess(agent_server + ":8071", null);
 			if (stat.hasOwnProperty("info")) {
-				console.log("process info:" + JSON.stringify(stat));
+			    console.log("process info:" + JSON.stringify(stat));
+			    
 				if (stat.data.processes instanceof Array) {
 					if (stat.data.processes[0].msg == "ENDED") {
 						return true;
