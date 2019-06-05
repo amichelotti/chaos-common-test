@@ -1,6 +1,6 @@
 var assert = require('assert');
 var btoa = require('btoa.js');
-var atob = require('atob.js');
+var atob = require('atob');
 
 var jchaos = require('jchaos.js');
 options = {};
@@ -69,7 +69,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 				var language = data['eudk_script_language'];
 				var defargs = data['default_argument'];
 				var workingdir = data['workingdir'];
-			        console.log("loadScript of :" + JSON.stringify(data));
+			      //  console.log("loadScript of :" + JSON.stringify(data));
 			data['eudk_script_content']=btoa(data['eudk_script_content']);
 				jchaos.rmtUploadScript(agent_server + ":8071", data, function (p) {
 					console.log("rmtUploadScript:" + JSON.stringify(p));
