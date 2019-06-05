@@ -1,5 +1,7 @@
 var assert = require('assert');
 var btoa = require('btoa.js');
+var atob = require('atob.js');
+
 var jchaos = require('jchaos.js');
 options = {};
 
@@ -122,6 +124,26 @@ describe("CHAOS AGENT ROOT TEST", function () {
 
 
 
+	});
+	it('Test Console', function (done) {
+		var agent_server = "localhost";
+		if (process.env.hasOwnProperty('AGENT_SERVER')) {
+			agent_server = process.env['AGENT_SERVER'];
+		}
+		jchaos.rmtListProcess(agent_server + ":8071", function(stat){
+			if (stat.data.processes instanceof Array) {
+				var uid=stat.data.processes[0].uid;
+				jchaos.rmtGetConsole(agent_server + ":8071", uid, 0, -1, function (r) {
+					console.log(atob(r.data.console));
+					done(0);
+	  
+				  }, function (bad) {
+					console.log("Some error getting console occur:" + bad);
+					done(1);
+				  });
+			}
+		});
+		
 	});
 });
 
