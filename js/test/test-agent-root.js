@@ -1,6 +1,6 @@
 var assert = require('assert');
 var btoa = require('btoa.js');
-var atob = require('atob');
+var atob = require('atob.js');
 
 var jchaos = require('jchaos.js');
 options = {};
