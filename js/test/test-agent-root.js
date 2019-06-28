@@ -102,7 +102,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		if (process.env.hasOwnProperty('AGENT_SERVER')) {
 			agent_server = process.env['AGENT_SERVER'];
 		}
-		jchaos.checkPeriodiocally("Check Tests ents", 30, 1000, function () {
+		jchaos.checkPeriodiocally("Check Tests ends", 60, 1000, function () {
 			var stat = jchaos.rmtListProcess(agent_server + ":8071", null);
 			if (stat.hasOwnProperty("info")) {
 			    console.log("process info:" + JSON.stringify(stat));
