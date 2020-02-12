@@ -105,7 +105,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.checkPeriodiocally("Check Tests ends", 60, 1000, function () {
 			var stat = jchaos.rmtListProcess(agent_server + ":8071", null);
 			if (stat.hasOwnProperty("info")) {
-			    console.log("process info:" + JSON.stringify(stat));
+			    //console.log("process info:" + JSON.stringify(stat));
 			    
 				if (stat.data.processes instanceof Array) {
 					if (stat.data.processes[0].msg == "ENDED") {
