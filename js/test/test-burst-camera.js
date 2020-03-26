@@ -64,11 +64,11 @@ describe('TEST BURST FEATURE', function () {
 
 		});
 	});
-	it('Retriving tags (TODO:must wait 5s otherwise no result where found in other cameras)', function (done) {
+	it('Retriving tags (TODO:must wait 65s otherwise no result where found in other cameras)', function (done) {
 		var stop_tag_time=Date.now();
 		var total={};
 		var cams=0;
-		console.log("wating 5 s");
+		console.log("wating 65 s");
 
 		setTimeout(function(){
 		camera_list.forEach(function(cam){
@@ -91,7 +91,7 @@ describe('TEST BURST FEATURE', function () {
 				}
 			},"burstbyseconds");
 		});
-	},5000);	
+	},65000);	
 	});
 
 

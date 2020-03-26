@@ -157,7 +157,7 @@ describe('CHAOS TEST TRANSITIONS', function () {
 	 		if (cu_status.length == 0)
 	 			done();
 			jchaos.node(cu_status, "init", "cu", null, null);
-	 		jchaos.checkLive('Load->Init',cu_status, 20, 1000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
+	 		jchaos.checkLive('Load->Init',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Init"); }, function () { done(0); }, function () { done(1) });
 
 	 	});
      });
