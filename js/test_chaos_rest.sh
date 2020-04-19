@@ -43,27 +43,31 @@ fi
 start_services || end_test 1 "cannot start services"
 
 
-if run_proc "$CHAOS_PREFIX/bin/ChaosMDSCmd --mds-conf $MDS_TEST_CONF $CHAOS_OVERALL_OPT >& $CHAOS_PREFIX/log/ChaosMDSCmd.log;" "ChaosMDSCmd"; then
-    ok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
-else
-    nok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
-    end_test 1 "trasfering configuration"
-fi
+# if run_proc "$CHAOS_PREFIX/bin/ChaosMDSCmd --mds-conf $MDS_TEST_CONF $CHAOS_OVERALL_OPT >& $CHAOS_PREFIX/log/ChaosMDSCmd.log;" "ChaosMDSCmd"; then
+#     ok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
+# else
+#     nok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
+#     end_test 1 "trasfering configuration"
+# fi
 
 export USNAME=UnitServer
 echo "1512080677 1277.13 836.85 0.0 84800.0 1 106 FFFFFFFF FFFFFFFF FFFFFFFF FFC00000 106 FFFFFFFF FFFFFFFF FFFFFFFF FFC00000 3 2 2 210258 0 -1 5.33e+00 1.67e+02 0 368667000 0.000 0.000 5201.4 0.0 1 0 0.000 0.000 0.000 0.000 -3.550 -0.370 -2.940 -0.510 -1.720 -0.470 1.360 0.490 20.33 1770.00 18.90 20.89 1.842 1.782 -0.745 1.520 " > newdafne.stat
+ if ! jchaosctl --server localhost:8081 --op start --uid TEST >& $CHAOS_PREFIX/log/jchaosctl.start.std.out;then
+            error_mesg "failed starting of " "TEST"
+            exit 1
+fi
 
-if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
-	if ! check_proc $USNAME;then
-	    error_mesg "$USNAME quitted"
-	    end_test 1 "$USNAME quitted"
-	fi
-    else
+# if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
+# 	if ! check_proc $USNAME;then
+# 	    error_mesg "$USNAME quitted"
+# 	    end_test 1 "$USNAME quitted"
+# 	fi
+#     else
 	
-    	error_mesg "registration failed"
-	stop_proc $USNAME
-	end_test 1 "registration failed"
-    fi
+#     	error_mesg "registration failed"
+# 	stop_proc $USNAME
+# 	end_test 1 "registration failed"
+#     fi
 
 info_mesg "waiting 5s ..."
 sleep 5
