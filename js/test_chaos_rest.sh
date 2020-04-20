@@ -41,11 +41,39 @@ fi
 # fi
 sleep 5
 
-if ! $CHAOS_PREFIX/tools/chaos_services.sh start devel;then
+if ! $CHAOS_PREFIX/tools/chaos_services.sh start;then
+    error_mesg "failed initialization of " "MDS"
+    exit 1
+fi
+## load configuration
+if ! $CHAOS_PREFIX/tools/chaos_services.sh config;then
     error_mesg "failed initialization of " "MDS"
     exit 1
 fi
 
+
+## perform chaosRoot test
+if ./node_modules/mocha/bin/mocha --timeout 60000 test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
+    ok_mesg "mocha unit server test test/test-agent-root.js "
+
+else
+    nok_mesg "mocha unit server test test/test-agent-root.js "
+    ((errors++))
+    if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
+        error_mesg "failed stopping  " "US"
+    fi
+
+    end_test $errors   
+fi
+
+## load configuration
+if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
+    error_mesg "failed starting " "TEST"
+    exit 1
+fi
+
+
+###
 info_mesg "waiting 10s ..."
 sleep 10
 errors=0
@@ -54,7 +82,7 @@ errors=0
 #tests="test-live.js test-transitions.js"
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="test/test-agent-root.js test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
+tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 #tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
@@ -68,7 +96,10 @@ if ./node_modules/mocha/bin/mocha --timeout 60000 $t  --reporter mochawesome  --
 else
     nok_mesg "mocha unit server test $t"
     ((errors++))
-    stop_proc $USNAME
+    if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
+        error_mesg "failed stopping  " "US"
+    fi
+
     end_test $errors   
 fi
 done
