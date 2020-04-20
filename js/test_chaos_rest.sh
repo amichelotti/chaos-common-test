@@ -83,5 +83,9 @@ done
 #      end_test $errors
      
 #  fi
-stop_proc $USNAME
+
+if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
+    error_mesg "failed stopping  " "US"
+fi
+
 end_test $errors
