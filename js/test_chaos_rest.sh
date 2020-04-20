@@ -17,15 +17,6 @@ if ! which node>&/dev/null;then
 
 fi
 ## start WS external driver service
-if [ -z "$MDS_TEST_CONF" ];then
-    MDS_TEST_CONF=$CHAOS_TOOLS/../etc/localhost/MDSConfig.json
-fi
-if [ -f "$MDS_TEST_CONF" ];then
-    ok_mesg "found $MDS_TEST_CONF"
-else
-    nok_mesg "cannot find $MDS_TEST_CONF"
-    end_test 1 "Cannot find $MDS_TEST_CONF"
-fi
    
 info_mesg "using configuration " "$MDS_TEST_CONF"
 
@@ -40,7 +31,6 @@ else
     sed -i "s/ws\:\/\/localhost:8123/ws\:\/\/$EXTERNAL_DRIVER_SERVER:8123/" $MDS_TEST_CONF
 fi
 
-start_services || end_test 1 "cannot start services"
 
 
 # if run_proc "$CHAOS_PREFIX/bin/ChaosMDSCmd --mds-conf $MDS_TEST_CONF $CHAOS_OVERALL_OPT >& $CHAOS_PREFIX/log/ChaosMDSCmd.log;" "ChaosMDSCmd"; then
@@ -49,28 +39,15 @@ start_services || end_test 1 "cannot start services"
 #     nok_mesg "Transfer test configuration \"$MDS_TEST_CONF\" to MDS"
 #     end_test 1 "trasfering configuration"
 # fi
+sleep 5
 
-export USNAME=UnitServer
-echo "1512080677 1277.13 836.85 0.0 84800.0 1 106 FFFFFFFF FFFFFFFF FFFFFFFF FFC00000 106 FFFFFFFF FFFFFFFF FFFFFFFF FFC00000 3 2 2 210258 0 -1 5.33e+00 1.67e+02 0 368667000 0.000 0.000 5201.4 0.0 1 0 0.000 0.000 0.000 0.000 -3.550 -0.370 -2.940 -0.510 -1.720 -0.470 1.360 0.490 20.33 1770.00 18.90 20.89 1.842 1.782 -0.745 1.520 " > newdafne.stat
- if ! jchaosctl --server localhost:8081 --op start --uid TEST >& $CHAOS_PREFIX/log/jchaosctl.start.std.out;then
-            error_mesg "failed starting of " "TEST"
-            exit 1
+if ! $CHAOS_PREFIX/tools/chaos_services.sh start devel;then
+    error_mesg "failed initialization of " "MDS"
+    exit 1
 fi
 
-# if launch_us_cu 1 100 $CHAOS_MDS $USNAME TEST 1;then
-# 	if ! check_proc $USNAME;then
-# 	    error_mesg "$USNAME quitted"
-# 	    end_test 1 "$USNAME quitted"
-# 	fi
-#     else
-	
-#     	error_mesg "registration failed"
-# 	stop_proc $USNAME
-# 	end_test 1 "registration failed"
-#     fi
-
-info_mesg "waiting 5s ..."
-sleep 5
+info_mesg "waiting 10s ..."
+sleep 10
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
