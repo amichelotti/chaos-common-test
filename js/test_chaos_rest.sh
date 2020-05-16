@@ -74,8 +74,8 @@ fi
 
 
 ###
-info_mesg "waiting 10s ..."
-sleep 10
+info_mesg "waiting 20s ..."
+sleep 20
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
