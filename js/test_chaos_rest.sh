@@ -52,6 +52,12 @@ if ! $CHAOS_PREFIX/tools/chaos_services.sh config;then
 fi
 
 
+## load configuration
+if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
+    error_mesg "failed starting " "TEST"
+    exit 1
+fi
+
 ## perform chaosRoot test
 if ./node_modules/mocha/bin/mocha --timeout 60000 test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
     ok_mesg "mocha unit server test test/test-agent-root.js "
@@ -64,12 +70,6 @@ else
     fi
 
     end_test $errors   
-fi
-
-## load configuration
-if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
-    error_mesg "failed starting " "TEST"
-    exit 1
 fi
 
 
