@@ -9,6 +9,7 @@ var clock = new Date();
 
 options = {};
 var npush = 500
+var uid="";
 
 process.argv.forEach(function (val, index, array) {
 
@@ -80,7 +81,9 @@ describe("CHAOS AGENT ROOT TEST", function () {
 
 						launch_arg = chaos_prefix + "/bin/chaosRoot --conf-file " + chaos_prefix + "/etc/chaos_root.cfg --rootopt \"-q " + path + defargs + "\"";
 						jchaos.rmtCreateProcess(agent_server + ":8071", name, launch_arg, language, workingdir, function (r) {
-							console.log("Script running onto:" + agent_server + " :" + JSON.stringify(r));
+							pid=r.info.pid;
+							uid=r.data.uid;
+							console.log("Script running onto:" + agent_server + " UID:"+uid+" :" + JSON.stringify(r));
 							done(0);
 
 						}, function (bad) {
@@ -104,21 +107,23 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		}
 		jchaos.checkPeriodiocally("Check Tests ends", 120, 2000, function () {
 			var stat = jchaos.rmtListProcess(agent_server + ":8071", null);
-			if (stat.hasOwnProperty("info")) {
-			    //console.log("process info:" + JSON.stringify(stat));
-			    
+			if (stat.data.hasOwnProperty("processes")) {
 				if (stat.data.processes instanceof Array) {
-					if (stat.data.processes[0].msg == "ENDED") {
-						return true;
-					}
-					return false;
-				} else {
-					console.log("## cannot find processes key:" + JSON.stringify(stat));
-					return false;
-				}
-			} else {
-				return false;
+					stat.data.processes.forEach(function(p){
+						//console.log("process info:" + JSON.stringify(p));
+
+						if((p.uid==uid)&&(p.msg == "ENDED")){
+							console.log("END uid "+p.uid+" "+p.msg);
+							done(0);
+							return true;
+						} else {
+							console.log("uid "+p.uid+" "+p.msg);
+						}
+					})	
 			}
+				
+			} 
+			return false;
 
 		}, function () { done(0); }, function () { done(1); });
 
@@ -130,19 +135,14 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		if (process.env.hasOwnProperty('AGENT_SERVER')) {
 			agent_server = process.env['AGENT_SERVER'];
 		}
-		jchaos.rmtListProcess(agent_server + ":8071", function(stat){
-			if (stat.data.processes instanceof Array) {
-				var uid=stat.data.processes[0].uid;
-				jchaos.rmtGetConsole(agent_server + ":8071", uid, 0, -1, function (r) {
-					console.log(atob(r.data.console));
-					done(0);
-	  
-				  }, function (bad) {
-					console.log("Some error getting console occur:" + bad);
-					done(1);
-				  });
-			}
-		});
+		jchaos.rmtGetConsole(agent_server + ":8071", uid, 0, -1, function (r) {
+			console.log(atob(r.data.console));
+			done(0);
+
+		  }, function (bad) {
+			console.log("Some error getting console occur:" + bad);
+			done(1);
+		  });
 		
 	});
 });
