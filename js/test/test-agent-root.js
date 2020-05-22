@@ -32,9 +32,26 @@ var root_program = "#include <driver/misc/models/cernRoot/rootUtil.h>\nint simpl
 jchaos.setOptions(options);
 
 var start_test = Date.now();
-
+var best_agent="";
+var best_server="";
 describe("CHAOS AGENT ROOT TEST", function () {
 	this.timeout(1200000);
+	it('Find best agent', function (done) {
+		jchaos.findBestServer(function (bs,ba) {
+			best_agent=ba;
+			best_server=bs;
+			if((best_agent!="")&&(best_server!="")){
+				console.log("\tbest server:"+best_server);
+				console.log("\tbest agent:"+best_agent);
+
+				done(0);
+			}else {
+				console.log("\t## no valid server retrieved");
+				done(1);
+			}
+		});
+
+	});
 
 	it('Upload script', function (done) {
 		var script = {};
@@ -48,7 +65,9 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		script['workingdir'] = "";
 		console.log("saving script:" + JSON.stringify(script));
 		jchaos.saveScript(script, function (data) {
-			done();
+			done(0);
+		},function(err){
+			done(1);
 		});
 
 	});
@@ -73,7 +92,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 			      //  console.log("loadScript of :" + JSON.stringify(data));
 			data['eudk_script_content']=btoa(data['eudk_script_content']);
 				jchaos.rmtUploadScript(agent_server + ":8071", data, function (p) {
-					console.log("rmtUploadScript:" + JSON.stringify(p));
+					//console.log("rmtUploadScript:" + JSON.stringify(p));
 					jchaos.rmtGetEnvironment(agent_server + ":8071", "CHAOS_PREFIX", function (r) {
 						var chaos_prefix = r.data.value;
 						var path = p.data.path;
@@ -83,7 +102,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 						jchaos.rmtCreateProcess(agent_server + ":8071", name, launch_arg, language, workingdir, function (r) {
 							pid=r.info.pid;
 							uid=r.data.uid;
-							console.log("Script running onto:" + agent_server + " UID:"+uid+" :" + JSON.stringify(r));
+						//	console.log("\tScript running onto:" + agent_server + " UID:"+uid+" :" + JSON.stringify(r));
 							done(0);
 
 						}, function (bad) {
@@ -114,10 +133,10 @@ describe("CHAOS AGENT ROOT TEST", function () {
 						var cuid=stat.data.processes[i].uid;
 						var cmsg=stat.data.processes[i].msg;
 						if((cuid==uid)&&(cmsg== "ENDED")){
-							console.log("END uid "+cuid+" "+cmsg);
+							console.log("\tEND uid "+cuid+" "+cmsg);
 							return true;
 						} else {
-							console.log("uid "+cuid+" "+cmsg);
+							console.log("\tuid "+cuid+" "+cmsg);
 						}
 					}	
 			}
@@ -145,5 +164,68 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		  });
 		
 	});
+	it('Test Associate Script sineWave', function (done) {
+		jchaos.associateNode(best_agent,"ALGO/WAVE","","sineWave.C",true,false,false,function(ok){
+			done(0);
+		},function(err){
+			console.log("\t## Association error:"+JSON.stringify(err));
+			done(1);
+		});
+		
+	});
+	it('Test Start  sineWave', function (done) {
+		jchaos.node("ALGO/WAVE", "start", "us", function () {
+			console.log("start ok");
+			done(0);
+		}, function (err) {
+			console.log("## Starting error:"+JSON.stringify(err));
+			done(1);
+		});
+		
+	});
+
+	it('Test if lives', function (done) {
+		jchaos.checkLive('Live check',["ALGO/WAVE/TEST/SINWAVE"], 30, 2000, function (ds) {
+			var ret=false;
+		//	console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
+			if(typeof(JSON.stringify(ds.system))=='undefined'){
+				console.log(ds.health.ndk_uid,": SYSTEM Undefined");
+			}
+			if(typeof(JSON.stringify(ds.health))=='undefined'){
+				console.log(ds.system.ndk_uid,": HEALTH Undefined");
+			}
+			if(typeof(JSON.stringify(ds.output))=='undefined'){
+				console.log(ds.system.ndk_uid,": OUTPUT Undefined");
+			}
+			if(typeof(JSON.stringify(ds.input))=='undefined'){
+				console.log(ds.health.ndk_uid,": INPUT Undefined");
+			}
+			try{
+				ret=((JSON.stringify(ds.system).length >= 2) && (JSON.stringify(ds.health).length >= 2) && (JSON.stringify(ds.output).length >= 2));
+			} catch(err){
+			}
+			return ret; }, function () { done(0); }, function () { done(1); });
+	
+		
+	});
+	it('Test STOP  sineWave', function (done) {
+		jchaos.node("ALGO/WAVE", "stop", "us", function () {
+			done(0);
+		}, function (err) {
+			console.log("## error:"+err);
+			done(1);
+		});
+		
+	});
+	it('Remove Node  sineWave', function (done) {
+		jchaos.node("ALGO/WAVE/TEST/SINWAVE", "deletenode", "root", function () {
+			done(0);
+		}, function (err) {
+			console.log("## deleting error:"+err);
+			done(1);
+		});
+		
+	});
+
 });
 
