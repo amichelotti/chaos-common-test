@@ -109,17 +109,17 @@ describe("CHAOS AGENT ROOT TEST", function () {
 			var stat = jchaos.rmtListProcess(agent_server + ":8071", null);
 			if (stat.data.hasOwnProperty("processes")) {
 				if (stat.data.processes instanceof Array) {
-					stat.data.processes.forEach(function(p){
+					for(var i in stat.data.processes){
 						//console.log("process info:" + JSON.stringify(p));
-
-						if((p.uid==uid)&&(p.msg == "ENDED")){
-							console.log("END uid "+p.uid+" "+p.msg);
-							done(0);
+						var cuid=stat.data.processes[i].uid;
+						var cmsg=stat.data.processes[i].msg;
+						if((cuid==uid)&&(cmsg== "ENDED")){
+							console.log("END uid "+cuid+" "+cmsg);
 							return true;
 						} else {
-							console.log("uid "+p.uid+" "+p.msg);
+							console.log("uid "+cuid+" "+cmsg);
 						}
-					})	
+					}	
 			}
 				
 			} 
