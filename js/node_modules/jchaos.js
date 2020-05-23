@@ -1045,7 +1045,7 @@
                     try {
                         JSON.stringify(value_); // check if json
                         opt['value'] = value_;
-                        console.log("param:" + JSON.stringify(opt, jchaos.extendJson));
+                      //  console.log("param:" + JSON.stringify(opt, jchaos.extendJson));
                     } catch (e) {
                         console.error("not a valid json error :'" + e + "' value:" + value_);
                         return;
@@ -2319,17 +2319,28 @@
              */
         jchaos.restoreFullConfig = function(config, configToRestore) {
                 var node_selected = "";
-                if ((typeof configToRestore === "undefined") || (configToRestore == null)) {
+                if (!(configToRestore instanceof Array)) {
                     configToRestore = ["us", "agents", "snapshots", "graphs", "custom_group", "cu_templates", "scripts"];
                 }
                 console.log("configs to restore:" + JSON.stringify(configToRestore));
-                console.log("To restore:" + JSON.stringify(config));
-
+                
                 if (!(configToRestore instanceof Array)) {
                     return;
                 }
                 configToRestore.forEach(function(sel) {
 
+                    if ((sel == "scripts") && (config instanceof Object) && 
+                    (config.hasOwnProperty("scripts") && (config['scripts'] instanceof Array))) {
+                        config['scripts'].forEach(function(sc){
+                        console.log("restoring script " + sc['script_name']);
+
+                        jchaos.saveScript(sc, function (data) {
+                        },function(err){
+                            console.error("## restoring script " + sc['script_name']+ " err:"+JSON.stringify(err));
+
+                        });
+                    });
+                }
                     if (sel == "us") {
                         if (config.hasOwnProperty('us') && (config.us instanceof Array)) {
                             config.us.forEach(function(data) {
@@ -2364,50 +2375,68 @@
                     }
                     if ((sel == "agents") && config.hasOwnProperty('agents') && (config.agents instanceof Array)) {
                         config.agents.forEach(function(json) {
+                            config.agents.forEach(function(json) {
+                                if(json.info.andk_node_associated instanceof Array){
+                                    json.info.andk_node_associated.forEach(function(ele){
+                                        console.log("associating "+json.name + " to:"+ele.ndk_uid);
+                                        jchaos.node(json.name, "set", "agent", null, ele, function(data) {
+                                        },function(err){
+                                            console.error("## restoring agent " + json.name+ "  value:"+JSON.stringify(ele)+ " err:"+JSON.stringify(err));
+                
+                                        });    
+    
+                                    });
+                                }
+                            });
 
-                            jchaos.agentSave(json.name, json.info);
+                            
                         });
                     }
                     if ((sel == "snapshots") && config.hasOwnProperty('snapshots') && (config.snapshots instanceof Array)) {
                         config.snapshots.forEach(function(json) {
-                            jchaos.snapshot(json.name, "set", "", json.dataset, function(d) {
-                                console.log("restoring snapshot '" + json.name + "' created:" + json.ts);
+                            console.log("restoring snapshot '" + json.snap.name + "' created:" + (new Date(json.snap.ts)).toString());
+
+                            jchaos.snapshot(json.snap.name, "set", "", json.dataset, function(d) {
+                            },function(err){
+                                console.error("## restoring snapshot " + json.snap.name +"  value:"+JSON.stringify(json.dataset)+ " err:"+JSON.stringify(err));
+    
                             });
                         });
                     }
                     if ((sel == "graphs") && config.hasOwnProperty('graphs') && (config.graphs instanceof Object)) {
+                        console.log("restoring graphs");
+
                         jchaos.variable("highcharts", "set", config.graphs, function(s) {
-                            console.log("restoring graphs:" + JSON.stringify(config.graphs));
                             high_graphs = config.graph;
+                        },function(err){
+                            console.error("## restoring graphs value:"+JSON.stringify(config.graphs)+ " err:"+JSON.stringify(err));
+
                         });
 
                     }
                     if ((sel == "custom_group") && config.hasOwnProperty('custom_group') && (config.custom_group instanceof Array)) {
+                        console.log("restoring custom groups.");
+
                         jchaos.variable("custom_group", "set", config.custom_group, function(s) {
-                            console.log("restoring custom groups:" + JSON.stringify(config.custom_group));
                             custom_group = config.custom_group;
+                        },function(err){
+                            console.error("## restoring custom group:"+JSON.stringify(config.custom_group)+ " err:"+JSON.stringify(err));
+
                         });
 
                     }
                     if ((sel == "cu_templates") && (config instanceof Object) && (config.hasOwnProperty("cu_templates"))) {
+                        console.log("restoring CU templates.");
 
                         jchaos.variable("cu_templates", "set", config["cu_templates"], function(s) {
-                            console.log("restoring CU templates:" + JSON.stringify(config["cu_templates"]));
+                        },function(err){
+                            console.error("## restoring CU templates:"+JSON.stringify(config["cu_templates"])+ " err:"+JSON.stringify(err));
+
                         });
 
                     }
-                    if ((sel == "scripts") && (config instanceof Object) && 
-                    (config.hasOwnProperty("scripts") && (config['scripts'] instanceof Array))) {
-                        config['scripts'].forEach(function(sc){
-                        jchaos.saveScript(sc, function (data) {
-                            console.log("restoring script " + sc['name']);
 
-                        });
-                    })
-
-
-                    }
-                });
+                    });
             }
             /**
              * activeAgentList
