@@ -636,11 +636,11 @@
                             } else {
                                 if ((typeof json === "object")) {
                                     if (json.hasOwnProperty('error_status')) {
-                                        alert(json.error_status);
+                                        jchaos.perror("Error:"+json.error_status);
                                     }
                                 }
                                 /*else {
-								alert(str);
+								jchaos.perror(str);
 							}*/
 
 
@@ -2153,16 +2153,22 @@
 
         jchaos.unitServerSave = function(json, obj, ok, nok) {
             if ((json == null) || !json.hasOwnProperty("ndk_uid")) {
-                alert("no ndk_uid key found");
+                jchaos.perror("no ndk_uid key found");
+                if(typeof bad ==="function"){bad("CU parent not defined");}
+                    
                 return 1;
             }
             if (json.ndk_uid == "") {
-                alert("US name cannot be empty");
+                jchaos.perror("US name cannot be empty");
+                if(typeof bad ==="function"){bad("US name cannot be empty");}
+               
                 return 2;
             }
             var node_selected = json.ndk_uid;
             if (node_selected == null || node_selected == "") {
-                alert("not US selected!");
+                jchaos.perror("not US selected!");
+                if(typeof bad ==="function"){bad("not US selected!");}
+               
                 return 3;
             }
 
@@ -2215,7 +2221,9 @@
             if ((json != null) && json.hasOwnProperty("ndk_uid")) {
                 var name = json.ndk_uid;
                 if (!json.hasOwnProperty("ndk_parent")) {
-                    alert("CU parent not defined");
+                    
+                    jchaos.perror("CU parent not defined");
+                    if(typeof bad ==="function"){bad("CU parent not defined");}
                     return 1;
                 }
                 json = jchaos.extendStringKey(json, 'cudk_load_param');
@@ -2232,7 +2240,7 @@
                 if (typeof bad === "function") {
                     bad("No ndk_uid field found");
                 }
-                alert("No ndk_uid field found");
+                jchaos.perror("No ndk_uid field found");
             }
             return 0;
         }
@@ -2243,7 +2251,7 @@
             }
             if ((node_selected == null || node_selected == "")) {
                 if (json.ndk_parent == "") {
-                    alert("not US selected!");
+                    jchaos.perror("not US selected!");
                     if (typeof bad === "function") {
                         bad("not US selected!");
                     }
@@ -2255,7 +2263,7 @@
                         if (typeof bad === "function") {
                             bad("US specified in CU does not exist (create before)");
                         }
-                        alert("US specified in CU does not exist (create before)");
+                        jchaos.perror("US specified in CU does not exist (create before)");
                         return -1;
                     }
                     node_selected = json.ndk_parent;
@@ -2265,11 +2273,11 @@
                 if (typeof bad === "function") {
                     bad("You must specify a valid implementation 'control_unit_implementation' " + JSON.stringify(json));
                 }
-                alert("You must specify a valid implementation 'control_unit_implementation' " + JSON.stringify(json));
+                jchaos.perror("You must specify a valid implementation 'control_unit_implementation' " + JSON.stringify(json));
                 return 1;
             }
             if (!json.hasOwnProperty("ndk_uid") || json.ndk_uid == "") {
-                alert("You must specify a valid UID 'ndk_uid'");
+                jchaos.perror("You must specify a valid UID 'ndk_uid'");
                 if (typeof bad === "function") {
                     bad("You must specify a valid UID 'ndk_uid'");
                 }
@@ -2288,7 +2296,7 @@
                     jchaos.node(node_selected, "set", "us", "", data.us_desc, ok, bad);
                 });
             } else {
-                alert("missing required field ndk_uid");
+                jchaos.perror("missing required field ndk_uid");
                 if (typeof bad === "function") {
                     bad("missing required field ndk_uid");
                 }
