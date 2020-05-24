@@ -17,7 +17,7 @@ if ! which node>&/dev/null;then
 
 fi
 ## checkout last jchaos
-if npm install jchaos mocha;then
+if npm install jchaos mocha mochawesome;then
     ok_mesg "installed last jchaos from npm "
 else
     error_mesg "cannot install jchaos from npm " "jchaos"
