@@ -16,6 +16,13 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 
 fi
+## checkout last jchaos
+if npm install jchaos mocha;then
+    ok_mesg "installed last jchaos from npm "
+else
+    error_mesg "cannot install jchaos from npm " "jchaos"
+fi
+
 ## start WS external driver service
    
 info_mesg "using configuration " "$MDS_TEST_CONF"
@@ -57,7 +64,6 @@ if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
     error_mesg "failed starting " "TEST"
     exit 1
 fi
-
 ## perform chaosRoot test
 if ./node_modules/mocha/bin/mocha --timeout 60000 test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
     ok_mesg "mocha unit server test test/test-agent-root.js "

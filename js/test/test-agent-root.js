@@ -1,8 +1,18 @@
 var assert = require('assert');
-var btoa = require('btoa.js');
-var atob = require('atob.js');
 
-var jchaos = require('jchaos.js');
+if (typeof btoa === 'undefined') {
+	global.btoa = function (str) {
+	  return new Buffer(str, 'binary').toString('base64');
+	};
+  }
+  
+  if (typeof atob === 'undefined') {
+	global.atob = function (b64Encoded) {
+	  return new Buffer(b64Encoded, 'base64').toString('binary');
+	};
+  }
+
+var jchaos = require('jchaos');
 options = {};
 
 var clock = new Date();
@@ -124,7 +134,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		if (process.env.hasOwnProperty('AGENT_SERVER')) {
 			agent_server = process.env['AGENT_SERVER'];
 		}
-		jchaos.checkPeriodiocally("Check Tests ends", 120, 2000, function () {
+		jchaos.checkPeriodiocally("\tCheck Tests ends", 120, 2000, function () {
 			var stat = jchaos.rmtListProcess(agent_server + ":8071", null);
 			if (stat.data.hasOwnProperty("processes")) {
 				if (stat.data.processes instanceof Array) {
@@ -175,7 +185,6 @@ describe("CHAOS AGENT ROOT TEST", function () {
 	});
 	it('Test Start  ALGO/WAVE', function (done) {
 		jchaos.node("ALGO/WAVE", "start", "us", function () {
-			console.log("start ok");
 			done(0);
 		}, function (err) {
 			console.log("## Starting error:"+JSON.stringify(err));
@@ -183,16 +192,16 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		});
 		
 	});
-	it('check go in Start', function (done) {
+	it('Check go in Start', function (done) {
 		var cu_status = [];
-		jchaos.checkLive('check Start',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
+		jchaos.checkLive('\tCheck Start',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
 			return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, 
 			function () { done(0); }, function () { done(1) });
 
 	});
 	
 	it('Test if lives', function (done) {
-		jchaos.checkLive('Live check',["ALGO/WAVE/TEST/SINWAVE"], 30, 2000, function (ds) {
+		jchaos.checkLive('\tLive check',["ALGO/WAVE/TEST/SINWAVE"], 30, 2000, function (ds) {
 			var ret=false;
 		//	console.log("syslen:"+JSON.stringify(ds.system).length+ " healt len:"+JSON.stringify(ds.health).length+" outlen:"+JSON.stringify(ds.output).length); 
 			if(typeof(JSON.stringify(ds.system))=='undefined'){
@@ -219,14 +228,14 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.node("ALGO/WAVE/TEST/SINWAVE", "stop", "cu", function () {
 			done(0);
 		}, function (err) {
-			console.log("## error:"+err);
+			console.log("## stop error:"+err);
 			done(1);
 		});
 		
 	});
 	it('check go in Stop', function (done) {
 		var cu_status = [];
-		jchaos.checkLive('check Start',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
+		jchaos.checkLive('\tCheck Stop',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
 			return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Stop"); }, 
 			function () { done(0); }, function () { done(1) });
 
@@ -236,14 +245,14 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.node("ALGO/WAVE/TEST/SINWAVE", "start", "cu", function () {
 			done(0);
 		}, function (err) {
-			console.log("## error:"+err);
+			console.log("## start error:"+err);
 			done(1);
 		});
 		
 	});
 	it('check go in Start', function (done) {
 		var cu_status = [];
-		jchaos.checkLive('check Start',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
+		jchaos.checkLive('\tCheck Start',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
 			return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Start"); }, 
 			function () { done(0); }, function () { done(1) });
 
@@ -254,14 +263,14 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.node("ALGO/WAVE/TEST/SINWAVE", "deinit", "cu", function () {
 			done(0);
 		}, function (err) {
-			console.log("## error:"+err);
+			console.log("## deinit error:"+err);
 			done(1);
 		});
 		
 	});
 	it('check go in Deinit', function (done) {
 		var cu_status = [];
-		jchaos.checkLive('check Start',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
+		jchaos.checkLive('\tCheck Deinit',["ALGO/WAVE/TEST/SINWAVE"], 20, 5000, function (ds) { 
 			return (ds!=null)&&ds.hasOwnProperty("health")&&ds.health.hasOwnProperty("nh_status")&&(ds.health.nh_status == "Deinit"); }, 
 			function () { done(0); }, function () { done(1) });
 
@@ -272,14 +281,13 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.node("ALGO/WAVE/TEST/SINWAVE", "unload", "cu", function () {
 			done(0);
 		}, function (err) {
-			console.log("## error:"+err);
+			console.log("## unload error:"+err);
 			done(1);
 		});
 		
 	});
 	it('Test STOP  ALGO/WAVE', function (done) {
 		jchaos.node("ALGO/WAVE", "stop", "us", function () {
-			console.log("start ok");
 			done(0);
 		}, function (err) {
 			console.log("## Stopping error:"+JSON.stringify(err));
@@ -292,7 +300,7 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.node("ALGO/WAVE/TEST/SINWAVE", "deletenode", "root", function () {
 			done(0);
 		}, function (err) {
-			console.log("## deleting error:"+err);
+			console.log("## remove  ALGO/WAVE/TEST/SINWAVE error:"+err);
 			done(1);
 		});
 		
@@ -301,11 +309,19 @@ describe("CHAOS AGENT ROOT TEST", function () {
 		jchaos.node("ALGO/WAVE", "deletenode", "root", function () {
 			done(0);
 		}, function (err) {
-			console.log("## deleting error:"+err);
+			console.log("## removing node error:"+err);
 			done(1);
 		});
 		
 	});
-
+	it('Remove Association ALGO/WAVE', function (done) {
+		jchaos.node(best_agent, "del", "agent","ALGO/WAVE",null, function () {
+			done(0);
+		}, function (err) {
+			console.log("## deleting association error:"+err);
+			done(1);
+		});
+		
+	});
 });
 

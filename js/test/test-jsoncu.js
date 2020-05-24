@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-var jchaos = require('jchaos.js');
+var jchaos = require('jchaos');
 options={};
 
 var clock = new Date();

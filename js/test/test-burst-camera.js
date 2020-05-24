@@ -1,7 +1,7 @@
 var assert = require('assert');
 //var assert = require('chai').assert;
 
-var jchaos = require('jchaos.js');
+var jchaos = require('jchaos');
 options = {};
 
 process.argv.forEach(function (val, index, array) {

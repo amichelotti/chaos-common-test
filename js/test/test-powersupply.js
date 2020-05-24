@@ -1,8 +1,8 @@
 var assert = require('assert');
 //var assert = require('chai').assert;
 
-var jchaos = require('jchaos.js');
-var jpowersupply = require('jpowersupply.js');
+var jchaos = require('jchaos');
+var jpowersupply = require('./jpowersupply.js');
 
 options = {};
 
@@ -187,7 +187,7 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 	function promiseCheckSnap(snap,culist){
 		var ret=new Promise(function(resolve,reject){
 		jchaos.snapshot(snap, "restore", "", "", function (d) {
-			jchaos.checkLive("check restore '" + snap + "'", culist,20, 5000, function (ds) { return (ds.system.busy == false)&&(ds.system.cudk_set_tag==snap)&&(ds.system.cudk_set_state==3); }, function () {
+			jchaos.checkLive("\tCheck restore '" + snap + "'", culist,20, 5000, function (ds) { return (ds.system.busy == false)&&(ds.system.cudk_set_tag==snap)&&(ds.system.cudk_set_state==3); }, function () {
 				jchaos.getChannel(culist, -1, function (data) {
 					var error = 0;
 					data.forEach(function (elem) {
@@ -202,11 +202,11 @@ describe('CHAOS POWERSUPPLY OPERATIVE TEST', function () {
 	
 					if(error==0){
 					
-						console.log(" SNAP OK");
+						console.log("\tSNAP OK");
 						resolve(error);
 						return;
 					} else {
-						console.log("SOME ERROR SNAP ");
+						console.error("SOME ERROR SNAP ");
 						reject(error);
 						return;
 					}
