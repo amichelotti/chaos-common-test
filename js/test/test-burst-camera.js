@@ -41,18 +41,18 @@ describe('TEST BURST FEATURE', function () {
 	it('check cudk_burst_state and cudk_burst_tag keys in health, and burst state == false', function (done) {
 		var cu_status = [];
 		jchaos.getCUStatus("Start", function (ll) {
-			console.log("N. CU in Start:" + ll.length);
+			console.log("\tN. CU in Start:" + ll.length);
 			cu_status = ll;
 			if (cu_status.length == 0)
 				done();
 			
-			jchaos.checkLive('check Burst Keys',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("system")&&ds.system.hasOwnProperty("cudk_burst_state")&&(ds.system.cudk_burst_state==false)&&ds.system.hasOwnProperty("cudk_burst_tag"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('\tCheck Burst Keys',cu_status, 20, 5000, function (ds) { return (ds!=null)&&ds.hasOwnProperty("system")&&ds.system.hasOwnProperty("cudk_burst_state")&&(ds.system.cudk_burst_state==false)&&ds.system.hasOwnProperty("cudk_burst_tag"); }, function () { done(0); }, function () { done(1) });
 		});
 	});
 
 	it('find all cameras implementation > 0, alive', function (done) {
 		jchaos.findCUByImplementation("Camera",true,function(cam){
-			console.log("N. camera found:" + cam.length+ " :"+JSON.stringify(cam));
+			console.log("\tN. camera found:" + cam.length+ " :"+JSON.stringify(cam));
 			camera_list=cam;
 			done(cam.length<=0);
 		});
@@ -60,7 +60,7 @@ describe('TEST BURST FEATURE', function () {
 	it('Start tagging cameras for 10s tagname="burstbyseconds"', function (done) {
 		jchaos.tag("burstbyseconds",camera_list,2,10000,function(){
 			start_tag_time=Date.now();
-			jchaos.checkLive('Tagging check',camera_list, 20, 5000, function (ds) { console.log("id:"+ds.system.ndk_uid+" burst state:"+ds.system.cudk_burst_state+" tag:'"+ds.system.cudk_burst_tag+"'");return (ds!=null)&&ds.hasOwnProperty("system")&&ds.system.hasOwnProperty("cudk_burst_state")&&(ds.system.cudk_burst_state==true)&&ds.system.hasOwnProperty("cudk_burst_tag")&&(ds.system.cudk_burst_tag=="burstbyseconds"); }, function () { done(0); }, function () { done(1) });
+			jchaos.checkLive('\tTagging check',camera_list, 20, 5000, function (ds) { console.log("id:"+ds.system.ndk_uid+" burst state:"+ds.system.cudk_burst_state+" tag:'"+ds.system.cudk_burst_tag+"'");return (ds!=null)&&ds.hasOwnProperty("system")&&ds.system.hasOwnProperty("cudk_burst_state")&&(ds.system.cudk_burst_state==true)&&ds.system.hasOwnProperty("cudk_burst_tag")&&(ds.system.cudk_burst_tag=="burstbyseconds"); }, function () { done(0); }, function () { done(1) });
 
 		});
 	});
@@ -68,7 +68,7 @@ describe('TEST BURST FEATURE', function () {
 		var stop_tag_time=Date.now();
 		var total={};
 		var cams=0;
-		console.log("wating 65 s");
+		console.log("\twating 65 s");
 
 		setTimeout(function(){
 		camera_list.forEach(function(cam){
