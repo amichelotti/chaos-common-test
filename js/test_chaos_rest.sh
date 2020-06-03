@@ -16,6 +16,13 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 
 fi
+## checkout last jchaos
+if npm install jchaos mocha mochawesome;then
+    ok_mesg "installed last jchaos from npm "
+else
+    error_mesg "cannot install jchaos from npm " "jchaos"
+fi
+
 ## start WS external driver service
    
 info_mesg "using configuration " "$MDS_TEST_CONF"
@@ -52,8 +59,13 @@ if ! $CHAOS_PREFIX/tools/chaos_services.sh config;then
 fi
 
 
+## load configuration
+if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
+    error_mesg "failed starting " "TEST"
+    exit 1
+fi
 ## perform chaosRoot test
-if ./node_modules/mocha/bin/mocha --timeout 60000 test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
+if ./node_modules/mocha/bin/mocha --timeout 60000 node_modules/jchaos/test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
     ok_mesg "mocha unit server test test/test-agent-root.js "
 
 else
@@ -66,23 +78,17 @@ else
     end_test $errors   
 fi
 
-## load configuration
-if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
-    error_mesg "failed starting " "TEST"
-    exit 1
-fi
-
 
 ###
-info_mesg "waiting 10s ..."
-sleep 10
+info_mesg "waiting 20s ..."
+sleep 20
 errors=0
 #tests="test-live.js test-jsoncu.js"
 #tests="test-live.js test-burst-camera.js"
 #tests="test-live.js test-transitions.js"
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
+tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js node_modules/jchaos/test/test-jsoncu.js"
 #tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
