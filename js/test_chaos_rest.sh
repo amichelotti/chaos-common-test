@@ -17,7 +17,7 @@ if ! which node>&/dev/null;then
 
 fi
 
-node_to_install="mocha mochawesome"
+node_to_install="jchaos mocha mochawesome"
 ## checkout last jchaos
 if [ ! -d node_modules/jchaos ];then
     node_to_install="jchaos mocha mochawesome"
