@@ -16,20 +16,26 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 
 fi
+
+node_to_install="jchaos mocha mochawesome"
 ## checkout last jchaos
-if npm install jchaos mocha mochawesome;then
+if [ ! -d node_modules/jchaos ];then
+    node_to_install="jchaos mocha mochawesome"
+fi
+if npm install $node_to_install; then
     ok_mesg "installed last jchaos from npm "
 else
     error_mesg "cannot install jchaos from npm " "jchaos"
 fi
 
+ 
 ## start WS external driver service
    
 info_mesg "using configuration " "$MDS_TEST_CONF"
 
 if [ -z $EXTERNAL_DRIVER_SERVER ];then
     rm -rf nodejs-external-driver-server-test
-    git clone git@baltig.infn.it:chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+    git clone https://amichelo:BZ72qmf4bi_muzh93z3a@baltig.infn.it/chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
     cd nodejs-external-driver-server-test
     ./launch.sh
     cd -
