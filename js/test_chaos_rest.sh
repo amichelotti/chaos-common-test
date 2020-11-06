@@ -16,6 +16,8 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 
 fi
+node_version=`node --version`
+info_mesg "NODEJS Version " "$node_version"
 
 node_to_install="jchaos mocha mochawesome"
 ## checkout last jchaos
