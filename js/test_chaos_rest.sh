@@ -73,18 +73,18 @@ if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
     exit 1
 fi
 ## perform chaosRoot test
-if ./node_modules/mocha/bin/mocha --timeout 60000 node_modules/jchaos/test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
-    ok_mesg "mocha unit server test test/test-agent-root.js "
+# if ./node_modules/mocha/bin/mocha --timeout 60000 node_modules/jchaos/test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
+#     ok_mesg "mocha unit server test test/test-agent-root.js "
 
-else
-    nok_mesg "mocha unit server test test/test-agent-root.js "
-    ((errors++))
-    if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
-        error_mesg "failed stopping  " "US"
-    fi
+# else
+#     nok_mesg "mocha unit server test test/test-agent-root.js "
+#     ((errors++))
+#     if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
+#         error_mesg "failed stopping  " "US"
+#     fi
 
-    end_test $errors   
-fi
+#     end_test $errors   
+# fi
 
 
 ###
@@ -96,7 +96,7 @@ errors=0
 #tests="test-live.js test-transitions.js"
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js node_modules/jchaos/test/test-jsoncu.js"
+tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js node_modules/jchaos/test/test-jsoncu.js node_modules/jchaos/test/test-agent-root.js "
 #tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
