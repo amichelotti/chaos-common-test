@@ -38,7 +38,7 @@ info_mesg "using configuration " "$MDS_TEST_CONF"
 if [ -z $EXTERNAL_DRIVER_SERVER ];then
     rm -rf nodejs-external-driver-server-test
     npm install chaos_external_driver_server
-#    git clone https://amichelo:BZ72qmf4bi_muzh93z3a@baltig.infn.it/chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+    git clone https://amichelo:BZ72qmf4bi_muzh93z3a@baltig.infn.it/chaos-lnf-control/nodejs-external-driver-server-test.git
     cd nodejs-external-driver-server-test
     ./launch.sh
     cd -
