@@ -40,7 +40,7 @@ if [ -z $EXTERNAL_DRIVER_SERVER ];then
     npm install chaos_external_driver_server
     git clone https://amichelo:BZ72qmf4bi_muzh93z3a@baltig.infn.it/chaos-lnf-control/nodejs-external-driver-server-test.git
     cd nodejs-external-driver-server-test
-    ./launch.sh
+    ./launch.sh > $CHAOS_PREFIX/log/external_driver_server.$$.log
     cd -
 else
     info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
