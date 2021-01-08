@@ -16,6 +16,8 @@ if ! which node>&/dev/null;then
     export PATH=$PATH:.
 
 fi
+node_version=`node --version`
+info_mesg "NODEJS Version " "$node_version"
 
 node_to_install="jchaos mocha mochawesome"
 ## checkout last jchaos
@@ -35,9 +37,10 @@ info_mesg "using configuration " "$MDS_TEST_CONF"
 
 if [ -z $EXTERNAL_DRIVER_SERVER ];then
     rm -rf nodejs-external-driver-server-test
-    git clone https://amichelo:BZ72qmf4bi_muzh93z3a@baltig.infn.it/chaos-lnf-control/nodejs-external-driver-server-test.git -b experimental
+    npm install chaos_external_driver_server
+    git clone https://amichelo:BZ72qmf4bi_muzh93z3a@baltig.infn.it/chaos-lnf-control/nodejs-external-driver-server-test.git
     cd nodejs-external-driver-server-test
-    ./launch.sh
+    ./launch.sh > $CHAOS_PREFIX/log/external_driver_server.$$.log
     cd -
 else
     info_mesg "External driver on " "$EXTERNAL_DRIVER_SERVER"
@@ -71,18 +74,18 @@ if ! $CHAOS_PREFIX/tools/chaos_services.sh start us;then
     exit 1
 fi
 ## perform chaosRoot test
-if ./node_modules/mocha/bin/mocha --timeout 60000 node_modules/jchaos/test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
-    ok_mesg "mocha unit server test test/test-agent-root.js "
+# if ./node_modules/mocha/bin/mocha --timeout 60000 node_modules/jchaos/test/test-agent-root.js   --reporter mochawesome  --reporter-options reportDir=$CHAOS_PREFIX/log/html,reportFilename=$t ;then
+#     ok_mesg "mocha unit server test test/test-agent-root.js "
 
-else
-    nok_mesg "mocha unit server test test/test-agent-root.js "
-    ((errors++))
-    if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
-        error_mesg "failed stopping  " "US"
-    fi
+# else
+#     nok_mesg "mocha unit server test test/test-agent-root.js "
+#     ((errors++))
+#     if ! $CHAOS_PREFIX/tools/chaos_services.sh stop us;then
+#         error_mesg "failed stopping  " "US"
+#     fi
 
-    end_test $errors   
-fi
+#     end_test $errors   
+# fi
 
 
 ###
@@ -94,7 +97,7 @@ errors=0
 #tests="test-live.js test-transitions.js"
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js node_modules/jchaos/test/test-jsoncu.js"
+tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js node_modules/jchaos/test/test-jsoncu.js node_modules/jchaos/test/test-agent-root.js "
 #tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
