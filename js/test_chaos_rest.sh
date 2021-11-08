@@ -97,7 +97,8 @@ errors=0
 #tests="test-live.js test-transitions.js"
 #tests="test/test-live.js test/test-powersupply.js"
 #tests="test-live.js test-jsoncu.js test-powersupply.js"
-tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js node_modules/jchaos/test/test-jsoncu.js node_modules/jchaos/test/test-agent-root.js "
+### node_modules/jchaos/test/test-jsoncu.js ## removed because will be supported in another way
+tests="node_modules/jchaos/test/test-live.js node_modules/jchaos/test/test-powersupply.js node_modules/jchaos/test/test-transitions.js  node_modules/jchaos/test/test-burst-camera.js  node_modules/jchaos/test/test-agent-root.js "
 #tests="test/test-live.js test/test-powersupply.js test/test-transitions.js  test/test-burst-camera.js test/test-jsoncu.js"
 export WEBUI_SERVER="localhost:8081"
 if [ -n "$CHAOS_WEBUI" ];then
