@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.9)
 project(common_test)
 find_package(Boost MODULE REQUIRED REQUIRED COMPONENTS program_options system)
 include_directories(../.. ${Boost_INCLUDE_DIRS})
